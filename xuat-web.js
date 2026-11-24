@@ -9,6 +9,9 @@ const json = JSON.stringify(info).replace(/</g, '\\u003c');
 
 const icon = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#4b2fa6"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="10" rx="1.5"/><path d="M9 19h6M12 15v4M8.5 10l2.5 2 4-4"/></g></svg>');
 const ten = info.thuongHieu || 'Học liệu số';
+// Mã xác minh Google Search Console: nhận cả dạng thẻ <meta ...> lẫn chỉ phần content
+const vcode = String(info.googleVerify || '').replace(/^.*content="([^"]+)".*$/s, '$1').replace(/^google-site-verification=/, '').trim();
+const verify = vcode ? '\n<meta name="google-site-verification" content="' + vcode.replace(/[^A-Za-z0-9_-]/g, '') + '">' : '';
 
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(SRC).filter(f => f.endsWith('.html'))) {
@@ -31,7 +34,7 @@ ${head}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
-<link rel="icon" href="${icon}">
+<link rel="icon" href="${icon}">${verify}
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
