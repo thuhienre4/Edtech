@@ -17,6 +17,22 @@ const verify = vcode ? '\n<meta name="google-site-verification" content="' + vco
 const base = String(info.diaChiWeb || '').trim().replace(/\/?$/, '/');
 const pageUrl = f => base + (f === 'index.html' ? '' : f);
 const pages = fs.readdirSync(SRC).filter(f => f.endsWith('.html'));
+// Đếm lượt xem và chỉ chỗ gửi đơn: trên chính server thì gọi /api, trên bản sao (GitHub Pages) thì gọi về diaChiWeb
+const apiOrigin = base !== '/' ? new URL(base).origin : '';
+const tracker = `<script>
+(function () {
+  var home = ${JSON.stringify(apiOrigin)};
+  window.API_WEB = location.origin === home ? '' : home;
+  if (!/^https?:$/.test(location.protocol) || !home) return;
+  var v = '';
+  try { v = localStorage.getItem('web-v') || ''; if (!v) { v = Math.random().toString(36).slice(2, 14); localStorage.setItem('web-v', v); } } catch (e) {}
+  var p = location.pathname.replace(/^\\/Edtech(?=\\/)/, '').replace(/\\/index\\.html$/, '/') || '/';
+  var body = JSON.stringify({ trang: p, v: v, ref: document.referrer });
+  var url = window.API_WEB + '/api/xem';
+  try { if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], { type: 'text/plain' }))) return; } catch (e) {}
+  try { fetch(url, { method: 'POST', body: body, keepalive: true }).catch(function () {}); } catch (e) {}
+})();
+</script>`;
 
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of pages) {
@@ -41,6 +57,7 @@ ${head}
 <meta property="og:description" content="${desc}">
 <link rel="icon" href="${icon}">${verify}${base !== '/' ? `\n<link rel="canonical" href="${pageUrl(f)}">\n<meta property="og:url" content="${pageUrl(f)}">` : ''}
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+${tracker}
 </head>
 <body>
 ${s.slice(cut).trim()}

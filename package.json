@@ -1,0 +1,10 @@
+{
+  "name": "website-lop-hoc-chung-enginelab",
+  "private": true,
+  "description": "Website giới thiệu Lớp học chung Offline và EngineLab, kèm đếm lượt xem, nhận đơn và trang quản trị",
+  "scripts": {
+    "start": "node server.js",
+    "xuat-web": "node xuat-web.js"
+  },
+  "engines": { "node": ">=20" }
+}

@@ -487,7 +487,7 @@ document.querySelectorAll('[data-copy]').forEach(function (btn) {
   });
 });
 
-/* Gửi form (nhận đơn qua Netlify Forms) */
+/* Gửi form: đơn về server của web (xem ở trang /quan-tri) */
 var form = document.getElementById('form-dat-hang'), msg = document.getElementById('form-msg'), sendBtn = document.getElementById('f-gui');
 function say(kind, text) { msg.hidden = false; msg.className = 'form-msg ' + kind; msg.textContent = text; }
 form.addEventListener('submit', function (ev) {
@@ -497,7 +497,7 @@ form.addEventListener('submit', function (ev) {
   if (document.getElementById('f-zalo').value.replace(/\D/g, '').length < 9) { say('err', 'Số Zalo cần ít nhất 9 chữ số, ví dụ 0912 345 678.'); document.getElementById('f-zalo').focus(); return; }
   sendBtn.disabled = true; sendBtn.textContent = 'Đang gửi…';
   var fallback = CONFIG.zalo ? ' Thầy cô nhắn thẳng Zalo ' + CONFIG.zalo + ' giúp nhé.' : CONFIG.zaloLink ? ' Thầy cô bấm nút Nhắn Zalo giúp nhé.' : CONFIG.email ? ' Thầy cô gửi email tới ' + CONFIG.email + ' giúp nhé.' : CONFIG.fanpage ? ' Thầy cô nhắn fanpage ' + CONFIG.fanpage + ' giúp nhé.' : ' Thầy cô thử lại sau ít phút giúp nhé.';
-  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
+  fetch((window.API_WEB || '') + '/api/don', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
     .then(function (r) { if (!r.ok) throw new Error(r.status); say('ok', 'Đã nhận đơn. Sẽ có tin nhắn Zalo phản hồi trong ngày.'); form.reset(); })
     .catch(function () { say('err', 'Chưa gửi được đơn.' + fallback); })
     .then(function () { sendBtn.disabled = false; sendBtn.textContent = 'Gửi đặt hàng'; });

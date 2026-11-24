@@ -706,7 +706,7 @@ form.addEventListener('submit', function (ev) {
   sendBtn.disabled = true; sendBtn.textContent = 'Đang gửi…';
   var body = new URLSearchParams(new FormData(form)).toString();
   var fallback = CONFIG.zalo ? ' Thầy cô nhắn thẳng Zalo ' + CONFIG.zalo + ' giúp nhé.' : CONFIG.zaloLink ? ' Thầy cô bấm nút Nhắn Zalo giúp nhé.' : CONFIG.email ? ' Thầy cô gửi email tới ' + CONFIG.email + ' giúp nhé.' : CONFIG.fanpage ? ' Thầy cô nhắn fanpage ' + CONFIG.fanpage + ' giúp nhé.' : ' Thầy cô thử lại sau ít phút giúp nhé.';
-  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+  fetch((window.API_WEB || '') + '/api/don', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
     .then(function (r) {
       if (!r.ok) throw new Error(r.status);
       say('ok', 'Đã nhận đăng ký. Trong ngày sẽ có tin nhắn Zalo gửi bản dùng thử.');
