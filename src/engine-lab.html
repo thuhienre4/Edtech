@@ -432,7 +432,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
         <div class="plan">
           <h3>Giáo viên</h3>
           <p class="who">Một tài khoản giáo viên, dùng cho các lớp mình dạy</p>
-          <p class="price"><span data-cfg="engineGiaGiaoVien" class="fill-in">điền giá</span> <small data-cfg="engineKyHan">/ năm</small></p>
+          <p class="price"><span data-cfg="engineGiaGiaoVien" data-empty="Liên hệ" class="fill-in">điền giá</span> <small data-cfg="engineKyHan">/ năm</small></p>
           <ul>
             <li>Toàn bộ bài học, mô hình 3D, thí nghiệm ảo</li>
             <li>Phòng quiz, kho đề, quản lý lớp</li>
@@ -493,7 +493,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
             <div class="field"><label for="f-ten">Họ và tên</label><input id="f-ten" name="ho-ten" autocomplete="name" placeholder="Trần Văn Minh"></div>
             <div class="field"><label for="f-zalo">Số Zalo</label><input id="f-zalo" name="zalo" type="tel" inputmode="tel" autocomplete="tel" placeholder="09xx xxx xxx"></div>
           </div>
-          <div class="field"><label for="f-truong">Trường, tỉnh / thành</label><input id="f-truong" name="truong" placeholder="THPT …, Nghệ An"></div>
+          <div class="field"><label for="f-truong">Trường, tỉnh / thành <span style="font-weight:400;opacity:.7">(không bắt buộc)</span></label><input id="f-truong" name="truong" placeholder="THPT …, Nghệ An"></div>
           <div class="field"><label for="f-khoi">Khối dạy chính</label>
             <select id="f-khoi" name="khoi"><option>Công nghệ 10</option><option>Công nghệ 11</option><option>Công nghệ 12</option><option>Nhiều khối</option></select>
           </div>
@@ -574,8 +574,8 @@ var form = document.getElementById('form-engine'), msg = document.getElementById
 function say(kind, text) { msg.hidden = false; msg.className = 'form-msg ' + kind; msg.textContent = text; }
 form.addEventListener('submit', function (ev) {
   ev.preventDefault();
-  var need = ['f-ten', 'f-zalo', 'f-truong'].filter(function (id) { return !document.getElementById(id).value.trim(); });
-  if (need.length) { say('err', 'Thầy cô điền giúp họ tên, số Zalo và trường để nhận hướng dẫn.'); document.getElementById(need[0]).focus(); return; }
+  var need = ['f-ten', 'f-zalo'].filter(function (id) { return !document.getElementById(id).value.trim(); });
+  if (need.length) { say('err', 'Thầy cô điền giúp họ tên và số Zalo để nhận hướng dẫn.'); document.getElementById(need[0]).focus(); return; }
   if (document.getElementById('f-zalo').value.replace(/\D/g, '').length < 9) { say('err', 'Số Zalo cần ít nhất 9 chữ số, ví dụ 0912 345 678.'); document.getElementById('f-zalo').focus(); return; }
   sendBtn.disabled = true; sendBtn.textContent = 'Đang gửi…';
   var fallback = CONFIG.zalo ? ' Thầy cô nhắn thẳng Zalo ' + CONFIG.zalo + ' giúp nhé.' : CONFIG.zaloLink ? ' Thầy cô bấm nút Nhắn Zalo giúp nhé.' : CONFIG.email ? ' Thầy cô gửi email tới ' + CONFIG.email + ' giúp nhé.' : CONFIG.fanpage ? ' Thầy cô nhắn fanpage ' + CONFIG.fanpage + ' giúp nhé.' : ' Thầy cô thử lại sau ít phút giúp nhé.';

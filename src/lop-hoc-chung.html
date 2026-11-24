@@ -302,7 +302,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
         <p class="lead">Thầy cô chiếu bài từ laptop, học sinh quét mã QR và trả lời ngay trên điện thoại qua Wi-Fi của lớp. Biểu đồ hiện lên màn chiếu, điểm tự cộng, cuối giờ có file Excel kết quả.</p>
         <div class="cta-row">
           <a class="btn btn-main" href="#dang-ky">Đăng ký dùng thử 30 ngày</a>
-          <a class="btn btn-ghost" href="#cach-dung">Xem video 2 phút</a>
+          <a class="btn btn-ghost" href="#cach-dung">Xem cách dùng</a>
         </div>
         <ul class="facts">
           <li>Không cần cài đặt</li>
@@ -492,7 +492,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
     </div>
   </section>
 
-  <section id="y-kien">
+  <section id="y-kien" data-wrap>
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Thầy cô đã dùng</p>
@@ -527,7 +527,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
         <div class="plan">
           <h3>Giáo viên</h3>
           <p class="who">Cho một thầy cô, dùng trên laptop của mình</p>
-          <p class="price"><span data-cfg="giaGiaoVien" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
+          <p class="price"><span data-cfg="giaGiaoVien" data-empty="Liên hệ" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
           <ul>
             <li>Đủ mọi loại câu hỏi và trò chơi</li>
             <li>Tự soạn bài không giới hạn</li>
@@ -537,8 +537,8 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
         </div>
         <div class="plan pop">
           <h3>Tổ chuyên môn</h3>
-          <p class="who">Cho cả tổ, tối đa <span data-cfg="soGvTo" class="fill-in">số GV</span> thầy cô</p>
-          <p class="price"><span data-cfg="giaTo" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
+          <p class="who">Cho cả tổ chuyên môn<span data-wrap>, tối đa <span data-cfg="soGvTo" class="fill-in">số GV</span> thầy cô</span></p>
+          <p class="price"><span data-cfg="giaTo" data-empty="Liên hệ" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
           <ul>
             <li>Mọi thứ trong gói giáo viên</li>
             <li>Một mã kích hoạt mang tên tổ</li>
@@ -605,7 +605,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
             <div class="field"><label for="f-ten">Họ và tên</label><input id="f-ten" name="ho-ten" autocomplete="name" required placeholder="Nguyễn Thị Lan"></div>
             <div class="field"><label for="f-zalo">Số Zalo</label><input id="f-zalo" name="zalo" type="tel" inputmode="tel" autocomplete="tel" required placeholder="09xx xxx xxx"></div>
           </div>
-          <div class="field"><label for="f-truong">Trường, tỉnh / thành</label><input id="f-truong" name="truong" required placeholder="THPT …, Hà Nội"></div>
+          <div class="field"><label for="f-truong">Trường, tỉnh / thành <span style="font-weight:400;opacity:.7">(không bắt buộc)</span></label><input id="f-truong" name="truong" required placeholder="THPT …, Hà Nội"></div>
           <div class="row2">
             <div class="field"><label for="f-mon">Môn dạy</label>
               <select id="f-mon" name="mon"><option>Hoạt động trải nghiệm</option><option>Giáo dục công dân / KT&amp;PL</option><option>Ngữ văn</option><option>Toán</option><option>Tiếng Anh</option><option>Khoa học tự nhiên</option><option>Lịch sử, Địa lí</option><option>Tin học, Công nghệ</option><option>Môn khác</option></select>
@@ -677,7 +677,7 @@ var mBar = document.querySelector('.m-bar');
 if (mBar && !zaloHref) mBar.style.gridTemplateColumns = '1fr';
 var vid = document.getElementById('video-link');
 if (CONFIG.video) { vid.href = CONFIG.video; var e = vid.querySelector('[data-cfg-empty]'); if (e) e.textContent = 'Mở video'; }
-else { vid.removeAttribute('target'); }
+else { vid.removeAttribute('target'); vid.querySelector('strong').textContent = 'Xem một tiết học thật'; var e2 = vid.querySelector('[data-cfg-empty]'); if (e2) e2.textContent = 'Đăng ký để được demo trực tiếp qua Zalo hoặc Google Meet'; }
 
 document.querySelectorAll('[data-plan]').forEach(function (a) {
   a.addEventListener('click', function () {
@@ -700,8 +700,8 @@ var form = document.getElementById('form-dang-ky'), msg = document.getElementByI
 function say(kind, text) { msg.hidden = false; msg.className = 'form-msg ' + kind; msg.textContent = text; }
 form.addEventListener('submit', function (ev) {
   ev.preventDefault();
-  var need = ['f-ten', 'f-zalo', 'f-truong'].filter(function (id) { return !document.getElementById(id).value.trim(); });
-  if (need.length) { say('err', 'Thầy cô điền giúp họ tên, số Zalo và trường để nhận bản dùng thử.'); document.getElementById(need[0]).focus(); return; }
+  var need = ['f-ten', 'f-zalo'].filter(function (id) { return !document.getElementById(id).value.trim(); });
+  if (need.length) { say('err', 'Thầy cô điền giúp họ tên và số Zalo để nhận bản dùng thử.'); document.getElementById(need[0]).focus(); return; }
   if (document.getElementById('f-zalo').value.replace(/\D/g, '').length < 9) { say('err', 'Số Zalo cần ít nhất 9 chữ số, ví dụ 0912 345 678.'); document.getElementById('f-zalo').focus(); return; }
   sendBtn.disabled = true; sendBtn.textContent = 'Đang gửi…';
   var body = new URLSearchParams(new FormData(form)).toString();

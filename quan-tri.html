@@ -206,6 +206,7 @@ function render() {
     ['Lượt xem ' + DAYS + ' ngày', n(o.xemKy), ''],
     ['Người xem ' + DAYS + ' ngày', n(o.nguoiKy), ''],
     ['Đơn ' + DAYS + ' ngày', n(o.donKy), ''],
+    ['Tỉ lệ để lại đơn / người xem', o.nguoiKy ? (o.donKy / o.nguoiKy * 100).toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + '%' : '—', ''],
     ['Đơn mới chưa xử lý', n(o.donMoi), o.donMoi ? 'alert' : ''],
     ['Đơn đã bán', n(o.daBan), ''],
     ['Doanh thu đã bán', n(o.doanhThu) + 'đ', 'money']

@@ -34,6 +34,101 @@ const tracker = `<script>
 })();
 </script>`;
 
+// Bản đưa lên mạng không để lộ khung "điền ...": có data-empty thì thay bằng chữ đó, nằm trong [data-wrap] thì ẩn cả khối, còn lại thì ẩn
+const finish = `<script>
+document.querySelectorAll('.fill-in').forEach(function (el) {
+  if (el.hidden) return;
+  if (el.dataset.empty) {
+    el.textContent = el.dataset.empty; el.classList.remove('fill-in');
+    var unit = el.parentNode && el.parentNode.querySelector('small'); if (unit) unit.hidden = true;
+    return;
+  }
+  (el.closest('[data-wrap]') || el).hidden = true;
+});
+</script>`;
+
+// Song ngữ: từ điển en.json (chữ tiếng Việt → tiếng Anh), nút VI / EN trên thanh đầu trang
+const EN = JSON.parse(fs.readFileSync(path.join(DIR, 'en.json'), 'utf8'));
+const i18n = `<script>
+(function () {
+  var EN = ${JSON.stringify(EN).replace(/</g, '\\u003c')};
+  var TAIL = [
+    [/^Thầy cô nhắn thẳng Zalo (.+) giúp nhé\\.$/, 'Please message us on Zalo at $1.'],
+    [/^Thầy cô gửi email tới (.+) giúp nhé\\.$/, 'Please email us at $1.'],
+    [/^Thầy cô nhắn fanpage (.+) giúp nhé\\.$/, 'Please message our fanpage: $1.']
+  ];
+  var RULES = [
+    [/^từ (.+)$/, function (m, a) { return 'from ' + a; }],
+    [/^\\/ năm · ≈ (.+)đ\\/tháng$/, function (m, a) { return '/ year · ≈ ' + a + ' VND/month'; }],
+    [/^Tiết kiệm (.+)đ so với mua riêng từng phần mềm\\.$/, function (m, a) { return 'Save ' + a + ' VND compared with buying each one separately.'; }],
+    [/^(Chưa gửi được (?:đơn|đăng ký)\\.) (.+)$/, function (m, a, b) { return (EN[a] || a) + ' ' + (EN[b] || tail(b)); }],
+    [/^(.+) · (Học liệu số cho giáo viên|Phần mềm hỗ trợ dạy học|Phần mềm dạy học)$/, function (m, a, b) { return (EN[a] || a) + ' · ' + EN[b]; }]
+  ];
+  function tail(s) { for (var i = 0; i < TAIL.length; i++) if (TAIL[i][0].test(s)) return s.replace(TAIL[i][0], TAIL[i][1]); return s; }
+  function tr(s) {
+    var k = s.replace(/\\s+/g, ' ').trim(); if (!k) return null;
+    var out = EN[k];
+    if (out == null) for (var i = 0; i < RULES.length && out == null; i++) { var m = k.match(RULES[i][0]); if (m) out = RULES[i][1].apply(null, m); }
+    if (out == null) return null;
+    return s.match(/^\\s*/)[0] + out + s.match(/\\s*$/)[0];
+  }
+  var KEY = 'web-lang', lang = 'vi';
+  try { lang = localStorage.getItem(KEY) || ''; } catch (e) {}
+  var q = /[?&]lang=(en|vi)/.exec(location.search); if (q) lang = q[1];
+  if (!lang) lang = /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en';
+  var texts = new Map(), attrs = new Map(), ATTR = ['placeholder', 'aria-label', 'title'], busy = false, title0 = document.title;
+  function doText(n) {
+    var rec = texts.get(n), cur = n.nodeValue;
+    if (rec && (cur === rec.t || cur === rec.o)) { if (cur === rec.t && lang === 'en') return; }
+    if (!rec || (cur !== rec.t && cur !== rec.o)) { rec = { o: cur, t: tr(cur) }; if (rec.t == null) { texts.delete(n); return; } texts.set(n, rec); }
+    var want = lang === 'en' ? rec.t : rec.o; if (n.nodeValue !== want) n.nodeValue = want;
+  }
+  function doEl(el) {
+    for (var i = 0; i < ATTR.length; i++) {
+      var a = ATTR[i]; if (!el.hasAttribute || !el.hasAttribute(a)) continue;
+      var m = attrs.get(el) || {}, cur = el.getAttribute(a), r = m[a];
+      if (!r || (cur !== r.t && cur !== r.o)) { var t = tr(cur); if (t == null) continue; r = m[a] = { o: cur, t: t }; attrs.set(el, m); }
+      var want = lang === 'en' ? r.t : r.o; if (cur !== want) el.setAttribute(a, want);
+    }
+  }
+  function walk(root) {
+    if (root.nodeType === 3) return doText(root);
+    if (root.nodeType !== 1 || /^(SCRIPT|STYLE|SVG)$/i.test(root.nodeName)) return;
+    doEl(root);
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, { acceptNode: function (n) { return n.parentNode && /^(SCRIPT|STYLE)$/i.test(n.parentNode.nodeName) ? 2 : 1; } });
+    var n; while ((n = w.nextNode())) { if (n.nodeType === 3) doText(n); else doEl(n); }
+  }
+  function apply() {
+    busy = true;
+    document.documentElement.lang = lang;
+    walk(document.body);
+    var t = tr(title0); document.title = lang === 'en' && t ? t : title0;
+    var b = document.getElementById('lang-btn'); if (b) { b.textContent = lang === 'en' ? 'VI' : 'EN'; b.setAttribute('aria-label', lang === 'en' ? 'Chuyển sang tiếng Việt' : 'Switch to English'); }
+    busy = false;
+  }
+  function button() {
+    var nav = document.querySelector('header nav') || document.querySelector('header .wrap');
+    var b = document.createElement('button');
+    b.type = 'button'; b.id = 'lang-btn'; b.className = 'lang-btn';
+    b.addEventListener('click', function () { lang = lang === 'en' ? 'vi' : 'en'; try { localStorage.setItem(KEY, lang); } catch (e) {} apply(); });
+    var st = document.createElement('style');
+    st.textContent = '.lang-btn{font:700 .82rem/1 inherit;letter-spacing:.04em;padding:8px 11px;border-radius:999px;border:1.5px solid currentColor;background:transparent;color:inherit;cursor:pointer;opacity:.85}.lang-btn:hover{opacity:1}';
+    document.head.appendChild(st);
+    if (nav) nav.insertBefore(b, nav.firstChild); else { b.style.cssText = 'position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:calc(10px + env(safe-area-inset-right,0px));z-index:40;background:#fff;color:#222'; document.body.appendChild(b); }
+  }
+  button(); apply();
+  new MutationObserver(function (list) {
+    if (busy) return; busy = true;
+    list.forEach(function (m) {
+      if (m.type === 'characterData') doText(m.target);
+      else if (m.type === 'attributes') doEl(m.target);
+      else m.addedNodes.forEach(walk);
+    });
+    busy = false;
+  }).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTR });
+})();
+</script>`;
+
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of pages) {
   let s = fs.readFileSync(path.join(SRC, f), 'utf8');
@@ -61,6 +156,8 @@ ${tracker}
 </head>
 <body>
 ${s.slice(cut).trim()}
+${finish}
+${i18n}
 </body>
 </html>
 `;

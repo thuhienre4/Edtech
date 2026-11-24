@@ -1,5 +1,5 @@
 {
-  "_huong_dan": "Điền thông tin rồi chạy: node xuat-web.js. Ô để trống sẽ hiện khung đỏ 'điền ...' trên web. zalo: số điện thoại (sẽ CÔNG KHAI trên web). zaloLink: link Zalo không lộ số (Zalo OA, nhóm Zalo). Để trống cả hai thì web ẩn nút Zalo. googleForm: link phiếu Google Forms (dạng https://forms.gle/...), có link thì web dùng phiếu Google để nhận đăng ký. googleVerify: mã xác minh Google Search Console (phần content=\"...\" của thẻ meta), để trống nếu chưa có. diaChiWeb: địa chỉ chính của web, dùng để Google tìm thấy trang (sitemap, canonical).",
+  "_huong_dan": "Điền thông tin rồi chạy: node xuat-web.js. Ô để trống sẽ hiện khung đỏ 'điền ...' trên web. zalo: số điện thoại (sẽ CÔNG KHAI trên web). zaloLink: link Zalo không lộ số (Zalo OA, nhóm Zalo). Để trống cả hai thì web ẩn nút Zalo. googleForm: link phiếu Google Forms (dạng https://forms.gle/...), có link thì web dùng phiếu Google để nhận đăng ký. googleVerify: mã xác minh Google Search Console (phần content=\"...\" của thẻ meta), để trống nếu chưa có. diaChiWeb: địa chỉ chính của web, dùng để Google tìm thấy trang (sitemap, canonical). giaCombo: giá gói mua cả hai phần mềm (để trống thì không hiện).",
   "diaChiWeb": "https://edtech-production-99c1c8d1.up.railway.app/",
   "thuongHieu": "",
   "tenNguoiBan": "",
@@ -17,5 +17,6 @@
   "engineGiaGiaoVien": "",
   "engineGiaTruong": "",
   "engineKyHan": "",
+  "giaCombo": "",
   "googleVerify": "google-site-verification=g094xrGaNAgZy8q8rQsCAyTn30s5dpQyxrQgD_-ZbeY"
 }

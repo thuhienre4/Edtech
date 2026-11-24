@@ -157,6 +157,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .prod-foot .p { font: 800 1.35rem var(--f-display); font-variant-numeric: tabular-nums }
 .prod-foot .p small { font: 500 .85rem var(--f-body); color: var(--ink-soft) }
 
+.combo { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; padding: 22px 26px; border: 2px dashed var(--violet); border-radius: 18px; background: var(--violet-soft) }
+.combo h3 { font-size: 1.25rem; margin: 4px 0 6px }
+.combo-buy { display: flex; flex-wrap: wrap; align-items: center; gap: 14px }
+.combo-buy .p { font: 800 1.5rem var(--f-display); font-variant-numeric: tabular-nums }
+.combo-buy .p small { font: 500 .85rem var(--f-body); color: var(--ink-soft) }
+
 /* lợi ích + các bước */
 .why { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px }
 @media (max-width: 820px) { .why { grid-template-columns: 1fr } }
@@ -256,6 +262,10 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
     <section class="duo-sec" id="san-pham">
       <div class="wrap">
         <div class="duo" id="duo"></div>
+        <div class="combo" id="combo" hidden>
+          <div><p class="eyebrow">Mua cả hai</p><h3>Lớp học chung Offline + EngineLab Công nghệ</h3><p class="lead" id="combo-note"></p></div>
+          <div class="combo-buy"><span class="p" id="combo-gia"></span><a class="btn btn-main" href="#dat-hang" data-order="combo">Đặt gói kết hợp</a></div>
+        </div>
       </div>
     </section>
 
@@ -313,7 +323,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
           <div class="contacts">
             <div class="contact"><div><small>Zalo / Điện thoại</small><strong id="c-zalo"><span data-cfg="zalo" class="fill-in">điền số Zalo</span></strong></div><button type="button" id="copy-zalo" data-copy="c-zalo">Sao chép</button></div>
             <div class="contact"><div><small>Email</small><strong id="c-mail"><span data-cfg="email" class="fill-in">điền email</span></strong></div><button type="button" id="copy-mail" data-copy="c-mail">Sao chép</button></div>
-            <div class="contact"><div><small>Fanpage</small><strong id="c-page"><span data-cfg="fanpage" class="fill-in">điền link fanpage</span></strong></div><button type="button" id="copy-page" data-copy="c-page">Sao chép</button></div>
+            <div class="contact" data-wrap><div><small>Fanpage</small><strong id="c-page"><span data-cfg="fanpage" class="fill-in">điền link fanpage</span></strong></div><button type="button" id="copy-page" data-copy="c-page">Sao chép</button></div>
           </div>
         </div>
         <form class="lead" id="form-dat-hang" name="dat-hang" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
@@ -392,11 +402,18 @@ var gsp = CONFIG.giaSanPham || {};
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 /* Chữ bắt đầu bằng "điền" là chỗ chưa có nội dung: hiện khung đỏ */
 function txt(s) { return /^điền/i.test(s) ? '<span class="fill-in">' + esc(s) + '</span>' : esc(s); }
+/* Giá hiện cho khách: chưa có giá thì ghi "Liên hệ báo giá"; giá theo năm thì kèm quy ra mỗi tháng */
+function giaHien(gia, ky) {
+  if (!gia) return '<span style="font-size:.8em">Liên hệ báo giá</span>';
+  ky = ky || '/ năm';
+  var so = +String(gia).replace(/\D/g, ''), thang = /năm/.test(ky) && so >= 12000 ? Math.round(so / 12 / 1000) * 1000 : 0;
+  return 'từ ' + esc(gia) + ' <small>' + esc(ky) + (thang ? ' · ≈ ' + thang.toLocaleString('vi-VN') + 'đ/tháng' : '') + '</small>';
+}
 function giaCua(p) {
-  if (p.ma === 'lop-hoc-chung') return CONFIG.giaGiaoVien ? 'từ ' + esc(CONFIG.giaGiaoVien) + ' <small>' + esc(CONFIG.kyHan || '/ năm') + '</small>' : '<span class="fill-in">điền giá</span>';
-  if (p.ma === 'engine-lab') return CONFIG.engineGiaGiaoVien ? 'từ ' + esc(CONFIG.engineGiaGiaoVien) + ' <small>' + esc(CONFIG.engineKyHan || '/ năm') + '</small>' : '<span class="fill-in">điền giá</span>';
+  if (p.ma === 'lop-hoc-chung') return giaHien(CONFIG.giaGiaoVien, CONFIG.kyHan);
+  if (p.ma === 'engine-lab') return giaHien(CONFIG.engineGiaGiaoVien, CONFIG.engineKyHan);
   var g = gsp[p.ma];
-  if (!g) return '<span class="fill-in">điền giá</span>';
+  if (!g) return giaHien('');
   return /miễn phí/i.test(g) ? '<span class="free">' + esc(g) + '</span>' : esc(g);
 }
 function cover(p, big) {
@@ -430,9 +447,16 @@ if (mBar && !zaloHref) mBar.style.gridTemplateColumns = '1fr';
 /* Hai sản phẩm */
 document.getElementById('duo').innerHTML = SAN_PHAM.map(prod).join('');
 
+if (CONFIG.giaCombo) {
+  document.getElementById('combo').hidden = false;
+  document.getElementById('combo-gia').innerHTML = giaHien(CONFIG.giaCombo, CONFIG.kyHan);
+  var tachLe = (+String(CONFIG.giaGiaoVien || '0').replace(/\D/g, '')) + (+String(CONFIG.engineGiaGiaoVien || '0').replace(/\D/g, '')), combo = +String(CONFIG.giaCombo).replace(/\D/g, '');
+  document.getElementById('combo-note').textContent = tachLe > combo ? 'Tiết kiệm ' + (tachLe - combo).toLocaleString('vi-VN') + 'đ so với mua riêng từng phần mềm.' : 'Một lần thanh toán cho cả hai phần mềm.';
+}
+
 /* Form đặt hàng: danh sách sản phẩm */
 var sel = document.getElementById('f-sp');
-sel.innerHTML = SAN_PHAM.map(function (p) { return '<option value="' + esc(p.ten) + '" data-ma="' + p.ma + '">' + esc(p.ten) + '</option>'; }).join('') + '<option value="Chưa chọn, cần tư vấn">Chưa chọn, cần tư vấn</option>';
+sel.innerHTML = SAN_PHAM.map(function (p) { return '<option value="' + esc(p.ten) + '" data-ma="' + p.ma + '">' + esc(p.ten) + '</option>'; }).join('') + (CONFIG.giaCombo ? '<option value="Gói kết hợp cả hai" data-ma="combo">Gói kết hợp cả hai</option>' : '') + '<option value="Chưa chọn, cần tư vấn">Chưa chọn, cần tư vấn</option>';
 function chonSP(ma) {
   for (var i = 0; i < sel.options.length; i++) if (sel.options[i].dataset.ma === ma) sel.selectedIndex = i;
 }
