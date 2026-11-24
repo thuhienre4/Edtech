@@ -1,0 +1,753 @@
+<title>Lớp học chung 2.0</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Phần mềm lớp học tương tác cho giáo viên THCS, THPT: cả lớp trả lời bằng điện thoại qua Wi-Fi của lớp, không cần Internet. Dùng thử 30 ngày đủ tính năng.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Pangolin&display=swap">
+<style>
+/* Layout: trang vở ô li — lề đỏ, mực tím, lời phê bút đỏ. Thứ tự chuẩn trang giáo dục: hứa hẹn → bằng chứng → lợi ích theo đối tượng → cách dùng → nội dung → so sánh → ý kiến → giá → hỏi đáp → đăng ký */
+:root {
+  --paper: #fbfaf6;
+  --paper-2: #f2f0f8;
+  --grid: rgba(92, 70, 170, .07);
+  --ink: #221d33;
+  --ink-soft: #5d5873;
+  --violet: #4b2fa6;
+  --violet-soft: #e7e1fa;
+  --red: #c8322b;
+  --green: #1f8a5b;
+  --line: #dcd7ea;
+  --card: #ffffff;
+  --screen: #1d1838;
+  --screen-fg: #f3f0ff;
+  --f-display: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-hand: "Pangolin", "Comic Sans MS", cursive;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #16131f; --paper-2: #1e1a2b; --grid: rgba(170, 150, 255, .06);
+  --ink: #ece9f5; --ink-soft: #a8a3bd; --violet: #a993ff; --violet-soft: #2c2547;
+  --red: #ff7a6e; --green: #4cc98f; --line: #332d47; --card: #1f1b2c;
+  --screen: #0d0b18; --screen-fg: #f3f0ff; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #16131f; --paper-2: #1e1a2b; --grid: rgba(170, 150, 255, .06);
+  --ink: #ece9f5; --ink-soft: #a8a3bd; --violet: #a993ff; --violet-soft: #2c2547;
+  --red: #ff7a6e; --green: #4cc98f; --line: #332d47; --card: #1f1b2c;
+  --screen: #0d0b18; --screen-fg: #f3f0ff; color-scheme: dark }
+
+* { box-sizing: border-box }
+html { scroll-behavior: smooth; scroll-padding-top: 72px }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } *, *::before, *::after { animation: none !important; transition: none !important } }
+body {
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--ink); font: 400 17px/1.65 var(--f-body);
+}
+a { color: var(--violet) }
+:focus-visible { outline: 3px solid var(--violet); outline-offset: 3px; border-radius: 4px }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0 }
+h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); font-weight: 800; letter-spacing: -.02em }
+h3 { font-size: 1.12rem; font-weight: 700 }
+p { margin: 0 }
+.eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--violet) }
+.hand { font-family: var(--f-hand); color: var(--red); font-weight: 400 }
+.lead { color: var(--ink-soft); max-width: 62ch }
+section { padding-block: clamp(56px, 8vw, 92px) }
+.sec-head { display: grid; gap: 12px; margin-bottom: 40px; max-width: 760px }
+.band { background: var(--paper-2); border-block: 1px solid var(--line) }
+.fill-in { background: color-mix(in srgb, var(--red) 12%, transparent); color: var(--red); border: 1.5px dashed var(--red); border-radius: 6px; padding: 0 8px; font-family: var(--f-hand); font-weight: 400; font-size: .85em }
+
+/* nút */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 700 1rem/1 var(--f-body); padding: 15px 22px; border-radius: 999px; text-decoration: none; border: 2px solid var(--violet); cursor: pointer }
+.btn-main { background: var(--violet); color: var(--paper) }
+.btn-main:hover { filter: brightness(1.1) }
+.btn-ghost { background: transparent; color: var(--violet) }
+.btn-ghost:hover { background: var(--violet-soft) }
+
+/* thanh trên */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line) }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--paper) }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px }
+.logo { display: flex; align-items: center; gap: 10px; font: 800 1.1rem var(--f-display); color: var(--ink); text-decoration: none }
+.logo-mark { width: 34px; height: 34px; border-radius: 9px; background: var(--violet); display: grid; place-items: center }
+.logo-mark svg { width: 20px; height: 20px }
+.top nav { display: flex; align-items: center; gap: 22px; font-size: .95rem }
+.top nav a { color: var(--ink-soft); text-decoration: none; font-weight: 500 }
+.top nav a:hover { color: var(--violet) }
+.top nav .btn { padding: 10px 16px; font-size: .92rem; color: var(--paper) }
+@media (max-width: 880px) { .top nav a:not(.btn) { display: none } }
+
+/* hero */
+.hero { padding-block: clamp(40px, 6vw, 76px) clamp(44px, 6vw, 70px) }
+.hero .wrap { display: grid; grid-template-columns: 1.02fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: center }
+@media (max-width: 920px) { .hero .wrap { grid-template-columns: 1fr } }
+.hero-copy { display: grid; gap: 22px; min-width: 0; position: relative; padding-left: 22px; border-left: 2px solid var(--red) }
+.hero h1 { font-size: clamp(2.2rem, 5.2vw, 3.6rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.08 }
+.hero h1 em { font-style: normal; color: var(--violet); position: relative; white-space: nowrap }
+.hero h1 em::after { content: ""; position: absolute; left: -2px; right: -2px; bottom: .02em; height: .14em; background: var(--red); opacity: .55; border-radius: 2px; transform: rotate(-1deg) }
+.hero .lead { font-size: 1.12rem }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .92rem; color: var(--ink-soft); list-style: none; padding: 0; margin: 0 }
+.facts li { display: flex; align-items: center; gap: 7px }
+.facts li::before { content: "✓"; color: var(--green); font-weight: 800 }
+.note-red { position: absolute; right: 0; top: -42px; transform: rotate(-4deg); font-size: 1.2rem }
+@media (max-width: 520px) { .note-red { display: none } }
+
+/* màn chiếu + điện thoại */
+.stage { position: relative; min-width: 0; padding-bottom: 40px }
+.screen { background: var(--screen); color: var(--screen-fg); border-radius: 14px; padding: 20px 22px 22px; box-shadow: 0 24px 50px -20px rgba(40, 20, 100, .45); border: 6px solid #2b2550 }
+.screen-bar { display: flex; justify-content: space-between; gap: 12px; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-bottom: 12px; font-variant-numeric: tabular-nums }
+.screen q { display: block; font: 700 clamp(1rem, 1.9vw, 1.2rem)/1.4 var(--f-display); quotes: none; margin-bottom: 16px; max-width: 30ch }
+.bars { display: grid; gap: 9px }
+.bar { display: grid; grid-template-columns: 26px 1fr 38px; align-items: center; gap: 10px; font-size: .86rem; font-variant-numeric: tabular-nums }
+.bar b { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font-size: .8rem; background: rgba(255,255,255,.1) }
+.bar .track { height: 26px; border-radius: 6px; background: rgba(255,255,255,.07); position: relative; overflow: hidden }
+.bar .fill { position: absolute; inset: 0 auto 0 0; width: var(--w); background: #6c55d9; border-radius: 6px; animation: grow 1.4s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s) }
+.bar .fill span { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-size: .8rem; color: #fff }
+.bar.ok b, .bar.ok .fill { background: #24a36b }
+.screen-foot { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; font-size: .8rem; opacity: .8; font-variant-numeric: tabular-nums }
+@keyframes grow { from { width: 0 } }
+.phone { position: absolute; right: -6px; bottom: -6px; width: 168px; background: var(--card); color: var(--ink); border-radius: 26px; border: 7px solid #221d33; padding: 14px 11px 16px; box-shadow: 0 20px 40px -14px rgba(20, 10, 60, .5); display: grid; gap: 7px; transform: rotate(4deg) }
+.phone .who { font-size: .7rem; color: var(--ink-soft); display: flex; justify-content: space-between }
+.phone .opt { font-size: .74rem; line-height: 1.3; padding: 8px 9px; border-radius: 8px; border: 1.5px solid var(--line) }
+.phone .opt.pick { border-color: var(--green); background: color-mix(in srgb, var(--green) 14%, transparent); font-weight: 600 }
+.phone .pts { text-align: center; font: 800 1.05rem var(--f-display); color: var(--green); font-variant-numeric: tabular-nums }
+@media (min-width: 561px) { .screen q { max-width: calc(100% - 150px) } }
+@media (max-width: 560px) { .phone { position: relative; right: auto; bottom: auto; margin: -30px 0 0 auto; width: 160px } .stage { padding-bottom: 0 } }
+
+/* dải con số */
+.stats { border-block: 1px solid var(--line); background: var(--card) }
+.stats .wrap { display: grid; grid-template-columns: repeat(4, 1fr); padding-block: 26px }
+@media (max-width: 760px) { .stats .wrap { grid-template-columns: 1fr 1fr; row-gap: 22px } }
+.stat { display: grid; gap: 2px; padding-inline: 18px; border-left: 1px solid var(--line) }
+.stat:first-child { border-left: 0; padding-left: 0 }
+@media (max-width: 760px) { .stat:nth-child(odd) { border-left: 0; padding-left: 0 } }
+.stat b { font: 800 clamp(1.8rem, 3.5vw, 2.4rem)/1.1 var(--f-display); color: var(--violet); font-variant-numeric: tabular-nums }
+.stat span { font-size: .92rem; color: var(--ink-soft) }
+
+/* vấn đề */
+.pains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px }
+@media (max-width: 820px) { .pains { grid-template-columns: 1fr } }
+.pain { display: grid; gap: 10px; align-content: start; padding-top: 18px; border-top: 3px solid var(--ink) }
+.pain .hand { font-size: 1.15rem }
+.pain p { color: var(--ink-soft) }
+
+/* lợi ích theo đối tượng */
+.roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px }
+@media (max-width: 880px) { .roles { grid-template-columns: 1fr } }
+.role { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 14px; align-content: start }
+.role-head { display: flex; align-items: center; gap: 12px }
+.role-ico { width: 42px; height: 42px; border-radius: 10px; background: var(--violet-soft); display: grid; place-items: center; flex: none }
+.role-ico svg { width: 22px; height: 22px; stroke: var(--violet); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+.role ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; font-size: .96rem }
+.role li { padding-left: 22px; position: relative }
+.role li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800 }
+
+/* các bước + video */
+.how { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center }
+@media (max-width: 880px) { .how { grid-template-columns: 1fr } }
+.steps { display: grid; gap: 26px; counter-reset: s; list-style: none; padding: 0; margin: 0 }
+.steps li { display: grid; gap: 6px; counter-increment: s; position: relative; padding-left: 58px }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: -4px; width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--red); color: var(--red); font: 1.5rem/38px var(--f-hand); text-align: center }
+.steps p { color: var(--ink-soft) }
+kbd { font: 600 .82em var(--f-body); padding: 1px 6px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; background: var(--card) }
+.video { display: grid; place-items: center; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 14px; background: var(--screen); color: var(--screen-fg); text-decoration: none; position: relative; overflow: hidden; border: 6px solid #2b2550 }
+.video::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(108,85,217,.5), transparent 60%) }
+.video-in { position: relative; display: grid; justify-items: center; gap: 12px; text-align: center; padding: 16px }
+.play { width: 68px; height: 68px; border-radius: 50%; background: #fff; display: grid; place-items: center; transition: transform .2s }
+.video:hover .play { transform: scale(1.08) }
+.play svg { width: 26px; height: 26px; margin-left: 4px }
+.video small { opacity: .75 }
+
+/* hoạt động */
+.acts { display: grid; grid-template-columns: 1fr 1fr; gap: 36px }
+@media (max-width: 820px) { .acts { grid-template-columns: 1fr } }
+.acts h3 { margin-bottom: 14px; display: flex; align-items: baseline; gap: 10px }
+.acts h3 small { font: 400 .85rem var(--f-body); color: var(--ink-soft) }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+@media (max-width: 460px) { .tiles { grid-template-columns: 1fr } }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; display: grid; gap: 4px; min-width: 0; align-content: start }
+.tile strong { font-weight: 700 }
+.tile span { font-size: .9rem; color: var(--ink-soft); line-height: 1.5 }
+.games .tile { border-color: color-mix(in srgb, var(--violet) 40%, var(--line)) }
+
+/* bài soạn sẵn */
+.lessons { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start }
+@media (max-width: 860px) { .lessons { grid-template-columns: 1fr } }
+.lesson-list { list-style: none; padding: 0; margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden }
+.lesson-list li { display: grid; grid-template-columns: 74px 1fr; gap: 14px; padding: 13px 18px; border-top: 1px solid var(--line); align-items: baseline }
+.lesson-list li:first-child { border-top: 0 }
+.lesson-list .tag { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--violet) }
+.lesson-side { display: grid; gap: 20px }
+.lesson-side ul { padding-left: 1.1em; margin: 0; display: grid; gap: 6px; color: var(--ink-soft) }
+.curri { border: 1.5px solid var(--violet); border-radius: 12px; padding: 18px 20px; display: grid; gap: 8px; background: color-mix(in srgb, var(--violet-soft) 50%, transparent) }
+.curri p { color: var(--ink-soft); font-size: .95rem }
+
+/* so sánh */
+.cmp-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--card) }
+table.cmp { width: 100%; min-width: 600px; border-collapse: collapse; font-size: .96rem }
+.cmp th, .cmp td { padding: 14px 18px; text-align: left; border-top: 1px solid var(--line); vertical-align: top }
+.cmp thead th { border-top: 0; font: 700 .8rem var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft) }
+.cmp thead th.us { color: var(--violet) }
+.cmp td.us { background: color-mix(in srgb, var(--violet-soft) 45%, transparent); font-weight: 600 }
+.cmp tbody th { font-weight: 600; width: 30% }
+.yes { color: var(--green) } .no { color: var(--red) }
+.privacy { margin-top: 28px; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; max-width: 820px }
+.privacy .role-ico { width: 48px; height: 48px }
+.privacy p { color: var(--ink-soft); margin-top: 4px }
+
+/* ý kiến */
+.quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px }
+@media (max-width: 880px) { .quotes { grid-template-columns: 1fr } }
+.quote { background: var(--card); border: 1.5px dashed var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 16px; align-content: space-between }
+.quote blockquote { margin: 0; font-size: 1.02rem; position: relative; padding-top: 18px }
+.quote blockquote::before { content: "“"; position: absolute; top: -14px; left: -4px; font: 800 3rem/1 var(--f-display); color: var(--violet); opacity: .35 }
+.quote footer { display: flex; align-items: center; gap: 12px; font-size: .9rem; color: var(--ink-soft); border: 0; padding: 0 }
+.ava { width: 40px; height: 40px; border-radius: 50%; background: var(--violet-soft); color: var(--violet); display: grid; place-items: center; font-weight: 800; flex: none }
+.quote footer strong { display: block; color: var(--ink) }
+.q-note { margin-top: 18px; font-size: .9rem; color: var(--ink-soft) }
+
+/* bảng giá */
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch }
+@media (max-width: 880px) { .plans { grid-template-columns: 1fr } }
+.plan { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px; display: grid; gap: 14px; grid-template-rows: auto auto auto 1fr auto }
+.plan.pop { border: 2px solid var(--violet); position: relative }
+.plan.pop::before { content: "Phù hợp nhất cho tổ"; position: absolute; top: -13px; left: 24px; background: var(--violet); color: var(--paper); font-size: .75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px }
+.plan .who { color: var(--ink-soft); font-size: .93rem }
+.price { font: 800 1.9rem/1.1 var(--f-display); font-variant-numeric: tabular-nums }
+.price small { font: 500 .9rem var(--f-body); color: var(--ink-soft) }
+.plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: .95rem }
+.plan li::before { content: "✓ "; color: var(--green); font-weight: 800 }
+.trial-note { margin-top: 22px; color: var(--ink-soft); font-size: .95rem }
+
+/* hỏi đáp */
+.faq { display: grid; gap: 10px; max-width: 820px }
+.faq details { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 4px 20px }
+.faq summary { cursor: pointer; font-weight: 700; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; gap: 16px }
+.faq summary::-webkit-details-marker { display: none }
+.faq summary::after { content: "+"; color: var(--violet); font-size: 1.3rem; line-height: 1 }
+.faq details[open] summary::after { content: "–" }
+.faq details p { padding-bottom: 16px; color: var(--ink-soft) }
+
+/* đăng ký */
+.final .box { background: var(--screen); color: var(--screen-fg); border-radius: 18px; padding: clamp(24px, 5vw, 52px); display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 4vw, 48px); align-items: start }
+@media (max-width: 880px) { .final .box { grid-template-columns: 1fr } }
+.final h2 { color: var(--screen-fg) }
+.final .sub { color: color-mix(in srgb, var(--screen-fg) 75%, transparent); margin-top: 12px }
+.final .fill-in { color: #ffb3ab; border-color: #ffb3ab; background: rgba(255,120,110,.12) }
+.perks { list-style: none; padding: 0; margin: 22px 0 26px; display: grid; gap: 10px }
+.perks li { padding-left: 24px; position: relative }
+.perks li::before { content: "✓"; position: absolute; left: 0; color: #6fe0a8; font-weight: 800 }
+.contacts { display: grid; gap: 10px }
+.contact { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 11px 14px; min-width: 0 }
+.contact div { min-width: 0 }
+.contact small { display: block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; opacity: .65 }
+.contact strong { user-select: all; overflow-wrap: anywhere }
+.contact button { font: 600 .85rem var(--f-body); background: transparent; color: var(--screen-fg); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 6px 12px; cursor: pointer; flex: none }
+.contact button:hover { background: rgba(255,255,255,.1) }
+form.lead { background: var(--card); color: var(--ink); border-radius: 14px; padding: clamp(20px, 3vw, 28px); display: grid; gap: 14px }
+form.lead h3 { font-size: 1.2rem }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px }
+@media (max-width: 520px) { .row2 { grid-template-columns: 1fr } }
+.field { display: grid; gap: 6px; min-width: 0 }
+.field label, .field legend { font-size: .88rem; font-weight: 600 }
+.field input, .field select { font: 400 1rem var(--f-body); padding: 11px 12px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); width: 100% }
+.field input:focus, .field select:focus { border-color: var(--violet); outline: none; box-shadow: 0 0 0 3px var(--violet-soft) }
+fieldset.field { border: 0; padding: 0; margin: 0 }
+.choices { display: flex; flex-wrap: wrap; gap: 8px }
+.choices label { display: flex; align-items: center; gap: 8px; border: 1.5px solid var(--line); border-radius: 999px; padding: 8px 14px; font-weight: 500; cursor: pointer }
+.choices label:has(input:checked) { border-color: var(--violet); background: var(--violet-soft) }
+.choices input { accent-color: var(--violet); margin: 0 }
+form.lead .btn { width: 100%; margin-top: 4px }
+.form-msg { font-size: .92rem; padding: 10px 12px; border-radius: 8px }
+.form-msg.ok { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green) }
+.form-msg.err { background: color-mix(in srgb, var(--red) 12%, transparent); color: var(--red) }
+.fine { font-size: .8rem; color: var(--ink-soft) }
+.hp { position: absolute; left: -9999px }
+
+footer.site { padding-block: 30px 40px; color: var(--ink-soft); font-size: .88rem; border-top: 1px solid var(--line) }
+footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px }
+
+/* nút Zalo nổi + thanh dưới trên điện thoại */
+.zalo-fab { position: fixed; right: calc(20px + env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 30; display: flex; align-items: center; gap: 8px; background: #0068ff; color: #fff; font-weight: 700; text-decoration: none; padding: 12px 18px 12px 14px; border-radius: 999px; box-shadow: 0 10px 24px -8px rgba(0, 80, 220, .6) }
+.zalo-fab svg { width: 24px; height: 24px }
+.m-bar { display: none }
+@media (max-width: 700px) {
+  .zalo-fab { display: none }
+  .m-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: var(--card); border-top: 1px solid var(--line); padding: 10px max(12px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)) }
+  .m-bar .btn { padding: 13px 10px; font-size: .95rem }
+  .m-bar .zalo { background: #0068ff; border-color: #0068ff; color: #fff }
+  footer.site { padding-bottom: 96px }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Về trang chủ">
+      <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 11l3 2 5-5"/></svg></span>
+      Lớp học chung
+    </a>
+    <nav aria-label="Mục chính">
+      <a href="index.html">Tất cả sản phẩm</a>
+      <a href="#loi-ich">Lợi ích</a>
+      <a href="#cach-dung">Cách dùng</a>
+      <a href="#bai-soan">Bài soạn sẵn</a>
+      <a href="#bang-gia">Bảng giá</a>
+      <a href="#hoi-dap">Hỏi đáp</a>
+      <a class="btn btn-main" href="#dang-ky">Đăng ký dùng thử</a>
+    </nav>
+  </div>
+</header>
+
+<main id="dau-trang">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="hand note-red">Không cần mạng!</span>
+        <p class="eyebrow">Phần mềm lớp học tương tác · THCS &amp; THPT</p>
+        <h1>Cả lớp trả lời bằng điện thoại, <em>không cần Internet</em></h1>
+        <p class="lead">Thầy cô chiếu bài từ laptop, học sinh quét mã QR và trả lời ngay trên điện thoại qua Wi-Fi của lớp. Biểu đồ hiện lên màn chiếu, điểm tự cộng, cuối giờ có file Excel kết quả.</p>
+        <div class="cta-row">
+          <a class="btn btn-main" href="#dang-ky">Đăng ký dùng thử 30 ngày</a>
+          <a class="btn btn-ghost" href="#cach-dung">Xem video 2 phút</a>
+        </div>
+        <ul class="facts">
+          <li>Không cần cài đặt</li>
+          <li>Học sinh không phải tải ứng dụng</li>
+          <li>Dữ liệu học sinh ở lại trong lớp</li>
+        </ul>
+      </div>
+
+      <div class="stage" aria-label="Minh hoạ màn chiếu và điện thoại học sinh">
+        <div class="screen">
+          <div class="screen-bar"><span>Câu 3 / 8 · Trắc nghiệm</span><span>Lừa đảo trực tuyến &amp; deepfake</span></div>
+          <q>Có cuộc gọi video, mặt và giọng giống hệt chị gái, nhờ chuyển gấp 5 triệu. Em làm gì trước tiên?</q>
+          <div class="bars">
+            <div class="bar"><b>A</b><div class="track"><div class="fill" style="--w:9%;--d:.1s"></div></div><span>3</span></div>
+            <div class="bar ok"><b>B</b><div class="track"><div class="fill" style="--w:72%;--d:.25s"><span>Gọi lại số quen của chị</span></div></div><span>23</span></div>
+            <div class="bar"><b>C</b><div class="track"><div class="fill" style="--w:13%;--d:.4s"></div></div><span>4</span></div>
+            <div class="bar"><b>D</b><div class="track"><div class="fill" style="--w:6%;--d:.55s"></div></div><span>2</span></div>
+          </div>
+          <div class="screen-foot"><span>32 / 32 em đã trả lời</span><span>Bấm Enter để công bố</span></div>
+        </div>
+        <div class="phone" aria-hidden="true">
+          <div class="who"><span>Lê Minh Châu</span><span>#2</span></div>
+          <div class="opt">A. Chuyển ngay vì là chị</div>
+          <div class="opt pick">B. Gọi lại số quen của chị</div>
+          <div class="opt">C. Hỏi tên con mèo nhà</div>
+          <div class="opt">D. Tắt máy, bỏ qua</div>
+          <div class="pts">+960 điểm</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats" aria-label="Sản phẩm trong con số">
+    <div class="wrap">
+      <div class="stat"><b>17</b><span>bài soạn sẵn đi kèm</span></div>
+      <div class="stat"><b>10</b><span>loại câu hỏi và trò chơi</span></div>
+      <div class="stat"><b>0 đ</b><span>tiền mạng, không cần Internet</span></div>
+      <div class="stat"><b>30 ngày</b><span>dùng thử đủ tính năng</span></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Vì sao thầy cô cần</p>
+        <h2>Tiết học tương tác không nên phụ thuộc vào Wi-Fi trường</h2>
+      </div>
+      <div class="pains">
+        <div class="pain">
+          <span class="hand">Mạng chập chờn</span>
+          <h3>Không còn cảnh 40 em cùng chờ trang tải</h3>
+          <p>Mọi thứ chạy trong lớp, giữa laptop của thầy cô và điện thoại học sinh. Phòng học không có Internet vẫn dạy được.</p>
+        </div>
+        <div class="pain">
+          <span class="hand">Rớt mạng giữa giờ</span>
+          <h3>Học sinh bị out vẫn giữ nguyên điểm</h3>
+          <p>Em nào lỡ đóng trang hay đổi sang máy khác chỉ cần nhập lại tên. Đáp án đã trả lời và điểm số vẫn còn nguyên.</p>
+        </div>
+        <div class="pain">
+          <span class="hand">Không có giờ soạn</span>
+          <h3>Có sẵn bài, chỉ việc bấm "Dạy bài này"</h3>
+          <p>Kèm bài kỹ năng sống THPT về các vấn đề thời sự, trò chơi khởi động và mẫu trống để tự điền câu hỏi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="loi-ich">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Lợi ích</p>
+        <h2>Mỗi người trong trường được một việc</h2>
+      </div>
+      <div class="roles">
+        <div class="role">
+          <div class="role-head"><span class="role-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><h3>Giáo viên</h3></div>
+          <ul>
+            <li>Biết ngay bao nhiêu em hiểu bài qua biểu đồ từng câu</li>
+            <li>Không phải chấm, điểm tự vào file Excel</li>
+            <li>Có bài mẫu dùng ngay cho tiết thao giảng, dự giờ</li>
+            <li>Gửi bài tự học về nhà qua Zalo</li>
+          </ul>
+        </div>
+        <div class="role">
+          <div class="role-head"><span class="role-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M10 21v-5h4v5"/></svg></span><h3>Tổ trưởng &amp; ban giám hiệu</h3></div>
+          <ul>
+            <li>Đổi mới phương pháp dạy học mà không phải đầu tư mạng</li>
+            <li>Theo dõi tiến độ học sinh qua cả năm học</li>
+            <li>Dữ liệu học sinh không gửi ra ngoài trường</li>
+            <li>Một mã kích hoạt cho cả tổ hoặc cả trường</li>
+          </ul>
+        </div>
+        <div class="role">
+          <div class="role-head"><span class="role-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span><h3>Học sinh</h3></div>
+          <ul>
+            <li>Ai cũng được trả lời, kể cả bạn ngại giơ tay</li>
+            <li>Trò chơi khởi động, bảng xếp hạng làm giờ học sôi nổi</li>
+            <li>Dùng điện thoại nào cũng được, không cần tài khoản</li>
+            <li>Ôn lại ở nhà không cần mạng</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cach-dung">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Cách dùng</p>
+        <h2>Ba bước là cả lớp vào được</h2>
+      </div>
+      <div class="how">
+        <ol class="steps">
+          <li><h3>Mở chương trình trên laptop</h3><p>Giải nén, bấm đúp <strong>LopHocChung.exe</strong>. Laptop tự phát Wi-Fi lớp, hoặc dùng chung Wi-Fi trường hay điểm phát sóng điện thoại.</p></li>
+          <li><h3>Chiếu mã QR lên bảng</h3><p>Chọn bài, bấm <strong>Dạy bài này</strong>. Học sinh quét mã, nhập họ tên là vào lớp. In thẻ vào lớp dán lên bàn để dùng cả năm.</p></li>
+          <li><h3>Dạy và chấm ngay trên lớp</h3><p>Chuyển slide bằng phím mũi tên, <kbd>Enter</kbd> công bố đáp án, <kbd>B</kbd> xem bảng xếp hạng. Kết thúc buổi là có file kết quả.</p></li>
+        </ol>
+        <a class="video" id="video-link" href="#dang-ky" target="_blank" rel="noopener">
+          <span class="video-in">
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#4b2fa6"/></svg></span>
+            <strong>Xem một tiết học thật trong 2 phút</strong>
+            <small data-cfg-empty="video">Chưa có video, <span class="fill-in">điền link video</span></small>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="hoat-dong">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Hoạt động trong bài</p>
+        <h2>Câu hỏi để kiểm tra, trò chơi để khởi động</h2>
+        <p class="lead">Chèn xen kẽ các loại slide trong cùng một bài. Điểm trò chơi cộng thẳng vào bảng xếp hạng và file kết quả.</p>
+      </div>
+      <div class="acts">
+        <div>
+          <h3>Câu hỏi <small>6 loại</small></h3>
+          <div class="tiles">
+            <div class="tile"><strong>Trắc nghiệm</strong><span>Trả lời nhanh được nhiều điểm hơn</span></div>
+            <div class="tile"><strong>Đúng / Sai</strong><span>Hai nút lớn, hợp với câu tình huống</span></div>
+            <div class="tile"><strong>Khảo sát ý kiến</strong><span>Không chấm điểm, xem cả lớp nghĩ gì</span></div>
+            <div class="tile"><strong>Đám mây từ</strong><span>Từ nhiều người gõ hiện to hơn</span></div>
+            <div class="tile"><strong>Ghép đôi</strong><span>Nối khái niệm với ví dụ</span></div>
+            <div class="tile"><strong>Sắp xếp thứ tự</strong><span>Các bước xử lý một tình huống</span></div>
+          </div>
+        </div>
+        <div class="games">
+          <h3>Trò chơi khởi động <small>4 trò</small></h3>
+          <div class="tiles">
+            <div class="tile"><strong>Vòng quay may mắn</strong><span>Quay tên học sinh, không lặp tới khi hết lớp, hoặc quay thử thách</span></div>
+            <div class="tile"><strong>Đua tên lửa</strong><span>Chia 2–4 đội, chạm liên tục để đẩy tên lửa, đội ít người vẫn công bằng</span></div>
+            <div class="tile"><strong>Phản xạ nhanh</strong><span>Màn hình chuyển xanh, ai chạm nhanh nhất thắng, mạng chậm không bị thiệt</span></div>
+            <div class="tile"><strong>Lật ô bí mật</strong><span>Trả lời đúng để lật dần ảnh, đoán từ khoá sớm được nhiều điểm</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="bai-soan">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Bài soạn sẵn đi kèm</p>
+        <h2>Bài kỹ năng sống THPT về chuyện học sinh đang gặp</h2>
+      </div>
+      <div class="lessons">
+        <ul class="lesson-list">
+          <li><span class="tag">THPT</span><span>Tỉnh táo trước lừa đảo trực tuyến và deepfake</span></li>
+          <li><span class="tag">THPT</span><span>Thuốc lá điện tử và chất gây nghiện trá hình</span></li>
+          <li><span class="tag">THPT</span><span>Áp lực học tập và sức khoẻ tinh thần</span></li>
+          <li><span class="tag">THPT</span><span>Dùng AI trong học tập một cách trung thực</span></li>
+          <li><span class="tag">THPT</span><span>Quản lí tiền, vay online và cá độ</span></li>
+          <li><span class="tag">THPT</span><span>Ứng phó thiên tai và biến đổi khí hậu</span></li>
+          <li><span class="tag">HĐTN</span><span>Lớp 10, 11, 12 · Chủ đề 4 và HĐ8 rèn luyện phẩm chất</span></li>
+          <li><span class="tag">KNS</span><span>5 bài: an toàn quanh em, an toàn trên mạng, giao tiếp hợp tác, cảm xúc…</span></li>
+        </ul>
+        <div class="lesson-side">
+          <div class="curri">
+            <p class="eyebrow">Phù hợp chương trình</p>
+            <h3>Theo định hướng Chương trình GDPT 2018</h3>
+            <p>Bài Hoạt động trải nghiệm, hướng nghiệp bám theo chủ đề trong sách giáo khoa hiện hành. Mỗi bài có khởi động, khám phá, luyện tập, vận dụng và tự đánh giá.</p>
+          </div>
+          <div>
+            <h3 style="margin-bottom:8px">Kèm thư mục mẫu trống</h3>
+            <ul>
+              <li>Mẫu trắc nghiệm, đúng/sai, trò chơi để điền câu hỏi riêng</li>
+              <li>Mở bằng Notepad, sửa chữ rồi nhập vào chương trình</li>
+              <li>Kèm danh sách câu hỏi kỹ năng sống gợi ý</li>
+            </ul>
+          </div>
+          <p class="hand" style="font-size:1.15rem">Soạn một lần, dạy nhiều lớp.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">So sánh</p>
+        <h2>Khác gì các công cụ trắc nghiệm trực tuyến?</h2>
+      </div>
+      <div class="cmp-wrap">
+        <table class="cmp">
+          <thead><tr><th scope="col">Tiêu chí</th><th scope="col">Công cụ trực tuyến thông thường</th><th scope="col" class="us">Lớp học chung</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Cần Internet</th><td>Cả giáo viên và học sinh</td><td class="us"><span class="yes">✓</span> Không cần, chỉ cần Wi-Fi lớp</td></tr>
+            <tr><th scope="row">Tài khoản</th><td>Giáo viên phải đăng ký, đôi khi cả học sinh</td><td class="us"><span class="yes">✓</span> Không cần tài khoản</td></tr>
+            <tr><th scope="row">Dữ liệu học sinh</th><td>Lưu trên máy chủ của nhà cung cấp</td><td class="us"><span class="yes">✓</span> Chỉ nằm trên laptop của thầy cô</td></tr>
+            <tr><th scope="row">Giao diện</th><td>Thường bằng tiếng Anh</td><td class="us"><span class="yes">✓</span> Tiếng Việt, có thêm tiếng Anh</td></tr>
+            <tr><th scope="row">Bài soạn sẵn</th><td>Tự tìm trong thư viện cộng đồng</td><td class="us"><span class="yes">✓</span> Bài kỹ năng sống, HĐTN tiếng Việt</td></tr>
+            <tr><th scope="row">Học sinh rớt mạng</th><td>Dễ phải vào lại từ đầu</td><td class="us"><span class="yes">✓</span> Vào lại vẫn giữ điểm và đáp án</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="privacy">
+        <span class="role-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <div>
+          <h3>An toàn dữ liệu học sinh</h3>
+          <p>Họ tên và kết quả học sinh chỉ lưu trong thư mục của chương trình trên laptop thầy cô. Không có tài khoản, không gửi lên máy chủ nào, phù hợp yêu cầu bảo vệ dữ liệu cá nhân trong nhà trường.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="y-kien">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Thầy cô đã dùng</p>
+        <h2>Ý kiến từ các tiết học thật</h2>
+      </div>
+      <div class="quotes">
+        <figure class="quote" style="margin:0">
+          <blockquote><span class="fill-in">Dán nhận xét thật của thầy cô số 1</span></blockquote>
+          <footer><span class="ava">A</span><span><strong><span class="fill-in">Họ tên</span></strong>Môn · Trường</span></footer>
+        </figure>
+        <figure class="quote" style="margin:0">
+          <blockquote><span class="fill-in">Dán nhận xét thật của thầy cô số 2</span></blockquote>
+          <footer><span class="ava">B</span><span><strong><span class="fill-in">Họ tên</span></strong>Môn · Trường</span></footer>
+        </figure>
+        <figure class="quote" style="margin:0">
+          <blockquote><span class="fill-in">Dán nhận xét thật của thầy cô số 3</span></blockquote>
+          <footer><span class="ava">C</span><span><strong><span class="fill-in">Họ tên</span></strong>Môn · Trường</span></footer>
+        </figure>
+      </div>
+      <p class="q-note">Chỉ đăng nhận xét thật, có sự đồng ý của thầy cô. Chưa có thì xoá cả mục này.</p>
+    </div>
+  </section>
+
+  <section class="band" id="bang-gia">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Bảng giá</p>
+        <h2>Dùng thử trước, ưng rồi mới mua</h2>
+        <p class="lead">Mua một lần nhận mã kích hoạt. Nhập mã vào chương trình là dùng tiếp, bài giảng và kết quả cũ giữ nguyên.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Giáo viên</h3>
+          <p class="who">Cho một thầy cô, dùng trên laptop của mình</p>
+          <p class="price"><span data-cfg="giaGiaoVien" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
+          <ul>
+            <li>Đủ mọi loại câu hỏi và trò chơi</li>
+            <li>Toàn bộ bài soạn sẵn và mẫu trống</li>
+            <li>Hỗ trợ cài đặt qua Zalo</li>
+          </ul>
+          <a class="btn btn-ghost" href="#dang-ky" data-plan="Giáo viên">Chọn gói giáo viên</a>
+        </div>
+        <div class="plan pop">
+          <h3>Tổ chuyên môn</h3>
+          <p class="who">Cho cả tổ, tối đa <span data-cfg="soGvTo" class="fill-in">số GV</span> thầy cô</p>
+          <p class="price"><span data-cfg="giaTo" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
+          <ul>
+            <li>Mọi thứ trong gói giáo viên</li>
+            <li>Một mã kích hoạt mang tên tổ</li>
+            <li>Một buổi hướng dẫn online cho cả tổ</li>
+          </ul>
+          <a class="btn btn-main" href="#dang-ky" data-plan="Tổ chuyên môn">Chọn gói tổ</a>
+        </div>
+        <div class="plan">
+          <h3>Cả trường</h3>
+          <p class="who">Không giới hạn giáo viên trong trường</p>
+          <p class="price" data-cfg="giaTruong">Liên hệ</p>
+          <ul>
+            <li>Mọi thứ trong gói tổ</li>
+            <li>Mã kích hoạt mang tên trường</li>
+            <li>Tập huấn tại trường theo lịch hẹn</li>
+          </ul>
+          <a class="btn btn-ghost" href="#dang-ky" data-plan="Cả trường">Nhận báo giá</a>
+        </div>
+      </div>
+      <p class="trial-note">Bản dùng thử 30 ngày mở đủ tính năng, không cần thẻ ngân hàng hay tài khoản. Trường cần hoá đơn, báo giá theo mẫu: ghi rõ trong form đăng ký.</p>
+    </div>
+  </section>
+
+  <section id="hoi-dap">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Hỏi đáp</p>
+        <h2>Thầy cô hay hỏi</h2>
+      </div>
+      <div class="faq">
+        <details open><summary>Có thật là không cần Internet không?</summary><p>Đúng vậy. Laptop và điện thoại học sinh chỉ cần cùng một Wi-Fi: Wi-Fi do laptop tự phát, bộ phát của trường, hoặc điểm phát sóng điện thoại của thầy cô. Wi-Fi đó không cần có Internet.</p></details>
+        <details><summary>Học sinh có phải cài ứng dụng không?</summary><p>Không. Học sinh quét mã QR bằng camera hoặc Zalo, trang lớp học mở trong trình duyệt. Điện thoại Android hay iPhone đều dùng được.</p></details>
+        <details><summary>Máy tính cần cấu hình thế nào?</summary><p>Laptop chạy Windows 10 hoặc 11. Không cần cài đặt, giải nén thư mục ra là chạy. Lần đầu mở, Windows có thể hỏi quyền chạy và quyền tường lửa, làm theo hướng dẫn đi kèm là xong.</p></details>
+        <details><summary>Học sinh lỡ thoát ra giữa giờ thì sao?</summary><p>Em đó mở lại trang và nhập đúng tên. Nếu vào bằng máy khác, chương trình hỏi "Bạn đã vào lớp trước đó?", bấm "Đúng là mình" là giữ nguyên điểm và các câu đã trả lời.</p></details>
+        <details><summary>Lớp không cho dùng điện thoại thì sao?</summary><p>Thầy cô vẫn chiếu bài và dùng vòng quay gọi tên, hoặc cho học sinh chia nhóm dùng chung máy tính bảng, laptop. Mỗi nhóm vào lớp bằng một tên nhóm.</p></details>
+        <details><summary>Hết 30 ngày dùng thử thì dữ liệu có mất không?</summary><p>Không mất. Bài giảng, kết quả và tiến độ học sinh vẫn nằm trong thư mục của chương trình. Nhập mã kích hoạt là dạy tiếp như cũ.</p></details>
+        <details><summary>Có dùng được bằng tiếng Anh không?</summary><p>Có. Mỗi máy tự chọn VI hoặc EN ở góc màn hình, hợp với giờ tiếng Anh hoặc lớp song ngữ. Nội dung bài thầy cô soạn giữ nguyên.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="dang-ky">
+    <div class="wrap">
+      <div class="box">
+        <div>
+          <h2>Đăng ký dùng thử 30 ngày</h2>
+          <p class="sub">Để lại thông tin, trong ngày sẽ có tin nhắn Zalo gửi file cài đặt và hướng dẫn.</p>
+          <ul class="perks">
+            <li>Đủ tính năng, không cần thẻ ngân hàng</li>
+            <li>Hỗ trợ cài đặt qua Zalo hoặc gọi video</li>
+            <li>Trường, tổ chuyên môn được demo miễn phí</li>
+          </ul>
+          <div class="contacts">
+            <div class="contact"><div><small>Zalo / Điện thoại</small><strong id="c-zalo"><span data-cfg="zalo" class="fill-in">điền số Zalo</span></strong></div><button type="button" id="copy-zalo" data-copy="c-zalo">Sao chép</button></div>
+            <div class="contact"><div><small>Email</small><strong id="c-mail"><span data-cfg="email" class="fill-in">điền email</span></strong></div><button type="button" id="copy-mail" data-copy="c-mail">Sao chép</button></div>
+          </div>
+        </div>
+
+        <form class="lead" id="form-dang-ky" name="dang-ky" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="dang-ky">
+          <p class="hp"><label for="f-bot">Bỏ trống ô này</label><input id="f-bot" name="bot-field" tabindex="-1" autocomplete="off"></p>
+          <h3>Thông tin của thầy cô</h3>
+          <div class="row2">
+            <div class="field"><label for="f-ten">Họ và tên</label><input id="f-ten" name="ho-ten" autocomplete="name" required placeholder="Nguyễn Thị Lan"></div>
+            <div class="field"><label for="f-zalo">Số Zalo</label><input id="f-zalo" name="zalo" type="tel" inputmode="tel" autocomplete="tel" required placeholder="09xx xxx xxx"></div>
+          </div>
+          <div class="field"><label for="f-truong">Trường, tỉnh / thành</label><input id="f-truong" name="truong" required placeholder="THPT …, Hà Nội"></div>
+          <div class="row2">
+            <div class="field"><label for="f-mon">Môn dạy</label>
+              <select id="f-mon" name="mon"><option>Hoạt động trải nghiệm</option><option>Giáo dục công dân / KT&amp;PL</option><option>Ngữ văn</option><option>Toán</option><option>Tiếng Anh</option><option>Khoa học tự nhiên</option><option>Lịch sử, Địa lí</option><option>Tin học, Công nghệ</option><option>Môn khác</option></select>
+            </div>
+            <div class="field"><label for="f-cap">Cấp học</label>
+              <select id="f-cap" name="cap"><option>THPT</option><option>THCS</option><option>Tiểu học</option><option>Trung tâm / kỹ năng sống</option></select>
+            </div>
+          </div>
+          <fieldset class="field">
+            <legend>Thầy cô cần</legend>
+            <div class="choices">
+              <label><input type="radio" id="f-nc1" name="nhu-cau" value="Dùng thử cá nhân" checked> Dùng thử cá nhân</label>
+              <label><input type="radio" id="f-nc2" name="nhu-cau" value="Demo cho tổ / trường"> Demo cho tổ / trường</label>
+              <label><input type="radio" id="f-nc3" name="nhu-cau" value="Báo giá"> Báo giá</label>
+            </div>
+          </fieldset>
+          <input type="hidden" name="goi" id="f-goi" value="">
+          <div class="form-msg" id="form-msg" role="status" hidden></div>
+          <button class="btn btn-main" type="submit" id="f-gui">Gửi đăng ký</button>
+          <p class="fine">Thông tin chỉ dùng để gửi bản dùng thử và hỗ trợ, không chia sẻ cho bên khác.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Lớp học chung 2.0 · <a href="index.html">Xem các sản phẩm khác</a></span>
+    <span>© 2026 <span data-cfg="tenNguoiBan" class="fill-in">tên người bán</span></span>
+  </div>
+</footer>
+
+<a class="zalo-fab" data-zalo href="#dang-ky" target="_blank" rel="noopener" aria-label="Nhắn Zalo">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 4.9 3.6 6.5L5 21l3.4-1.7c1.1.3 2.3.5 3.6.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/></svg>
+  Nhắn Zalo
+</a>
+<div class="m-bar">
+  <a class="btn zalo" data-zalo href="#dang-ky" target="_blank" rel="noopener">Nhắn Zalo</a>
+  <a class="btn btn-main" href="#dang-ky">Dùng thử 30 ngày</a>
+</div>
+
+<script>
+/* ===== THÔNG TIN CẦN ĐIỀN: chỉ sửa ở đây ===== */
+/* Thông tin (giá, Zalo, email...) điền trong website/thong-tin.json, rồi chạy: node website/xuat-web.js */
+var CONFIG = /*THONG-TIN*/{}/*HET*/;
+/* ============================================= */
+
+document.querySelectorAll('[data-cfg]').forEach(function (el) {
+  var v = CONFIG[el.dataset.cfg];
+  if (v) { el.textContent = v; el.classList.remove('fill-in'); }
+});
+var phone = (CONFIG.zalo || '').replace(/\D/g, '');
+document.querySelectorAll('[data-zalo]').forEach(function (a) {
+  if (phone) a.href = 'https://zalo.me/' + phone;
+  else { a.removeAttribute('target'); }
+});
+var vid = document.getElementById('video-link');
+if (CONFIG.video) { vid.href = CONFIG.video; var e = vid.querySelector('[data-cfg-empty]'); if (e) e.textContent = 'Mở video'; }
+else { vid.removeAttribute('target'); }
+
+document.querySelectorAll('[data-plan]').forEach(function (a) {
+  a.addEventListener('click', function () {
+    document.getElementById('f-goi').value = a.dataset.plan;
+    document.getElementById(a.dataset.plan === 'Cả trường' ? 'f-nc3' : 'f-nc1').checked = true;
+  });
+});
+
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.copy);
+    var text = el.textContent.trim();
+    var done = function () { btn.textContent = 'Đã chép'; setTimeout(function () { btn.textContent = 'Sao chép'; }, 1600); };
+    var pick = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Bấm Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, pick); } catch (e) { pick(); }
+  });
+});
+
+var form = document.getElementById('form-dang-ky'), msg = document.getElementById('form-msg'), sendBtn = document.getElementById('f-gui');
+function say(kind, text) { msg.hidden = false; msg.className = 'form-msg ' + kind; msg.textContent = text; }
+form.addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  var need = ['f-ten', 'f-zalo', 'f-truong'].filter(function (id) { return !document.getElementById(id).value.trim(); });
+  if (need.length) { say('err', 'Thầy cô điền giúp họ tên, số Zalo và trường để nhận bản dùng thử.'); document.getElementById(need[0]).focus(); return; }
+  if (document.getElementById('f-zalo').value.replace(/\D/g, '').length < 9) { say('err', 'Số Zalo cần ít nhất 9 chữ số, ví dụ 0912 345 678.'); document.getElementById('f-zalo').focus(); return; }
+  sendBtn.disabled = true; sendBtn.textContent = 'Đang gửi…';
+  var body = new URLSearchParams(new FormData(form)).toString();
+  var fallback = CONFIG.zalo ? ' Thầy cô nhắn thẳng Zalo ' + CONFIG.zalo + ' giúp nhé.' : ' Thầy cô nhắn Zalo theo số ở bên cạnh giúp nhé.';
+  fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+    .then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      say('ok', 'Đã nhận đăng ký. Trong ngày sẽ có tin nhắn Zalo gửi bản dùng thử.');
+      form.reset();
+    })
+    .catch(function () { say('err', 'Chưa gửi được đăng ký.' + fallback); })
+    .then(function () { sendBtn.disabled = false; sendBtn.textContent = 'Gửi đăng ký'; });
+});
+</script>
