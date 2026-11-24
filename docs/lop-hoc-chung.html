@@ -178,15 +178,6 @@ kbd { font: 600 .82em var(--f-body); padding: 1px 6px; border: 1px solid var(--l
 .tile span { font-size: .9rem; color: var(--ink-soft); line-height: 1.5 }
 .games .tile { border-color: color-mix(in srgb, var(--violet) 40%, var(--line)) }
 
-/* bài soạn sẵn */
-.lessons { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start }
-@media (max-width: 860px) { .lessons { grid-template-columns: 1fr } }
-.lesson-list { list-style: none; padding: 0; margin: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden }
-.lesson-list li { display: grid; grid-template-columns: 74px 1fr; gap: 14px; padding: 13px 18px; border-top: 1px solid var(--line); align-items: baseline }
-.lesson-list li:first-child { border-top: 0 }
-.lesson-list .tag { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--violet) }
-.lesson-side { display: grid; gap: 20px }
-.lesson-side ul { padding-left: 1.1em; margin: 0; display: grid; gap: 6px; color: var(--ink-soft) }
 .curri { border: 1.5px solid var(--violet); border-radius: 12px; padding: 18px 20px; display: grid; gap: 8px; background: color-mix(in srgb, var(--violet-soft) 50%, transparent) }
 .curri p { color: var(--ink-soft); font-size: .95rem }
 
@@ -304,7 +295,6 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
       <a href="index.html">Tất cả sản phẩm</a>
       <a href="#loi-ich">Lợi ích</a>
       <a href="#cach-dung">Cách dùng</a>
-      <a href="#bai-soan">Bài soạn sẵn</a>
       <a href="#bang-gia">Bảng giá</a>
       <a href="#hoi-dap">Hỏi đáp</a>
       <a class="btn btn-main" href="#dang-ky">Đăng ký dùng thử</a>
@@ -357,7 +347,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
 
   <div class="stats" aria-label="Sản phẩm trong con số">
     <div class="wrap">
-      <div class="stat"><b>17</b><span>bài soạn sẵn đi kèm</span></div>
+      <div class="stat"><b>VI · EN</b><span>giao diện tiếng Việt và tiếng Anh</span></div>
       <div class="stat"><b>10</b><span>loại câu hỏi và trò chơi</span></div>
       <div class="stat"><b>0 đ</b><span>tiền mạng, không cần Internet</span></div>
       <div class="stat"><b>30 ngày</b><span>dùng thử đủ tính năng</span></div>
@@ -382,9 +372,9 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
           <p>Em nào lỡ đóng trang hay đổi sang máy khác chỉ cần nhập lại tên. Đáp án đã trả lời và điểm số vẫn còn nguyên.</p>
         </div>
         <div class="pain">
-          <span class="hand">Không có giờ soạn</span>
-          <h3>Có sẵn bài, chỉ việc bấm "Dạy bài này"</h3>
-          <p>Kèm bài kỹ năng sống THPT về các vấn đề thời sự, trò chơi khởi động và mẫu trống để tự điền câu hỏi.</p>
+          <span class="hand">Chấm bài mất thời gian</span>
+          <h3>Điểm tự vào file Excel</h3>
+          <p>Mỗi buổi học tự lưu kết quả từng em, từng câu. Không phải chấm, không phải nhập điểm lại.</p>
         </div>
       </div>
     </div>
@@ -402,7 +392,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
           <ul>
             <li>Biết ngay bao nhiêu em hiểu bài qua biểu đồ từng câu</li>
             <li>Không phải chấm, điểm tự vào file Excel</li>
-            <li>Có bài mẫu dùng ngay cho tiết thao giảng, dự giờ</li>
+            <li>Soạn câu hỏi một lần, dùng lại cho nhiều lớp</li>
             <li>Gửi bài tự học về nhà qua Zalo</li>
           </ul>
         </div>
@@ -483,42 +473,6 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
     </div>
   </section>
 
-  <section id="bai-soan">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="eyebrow">Bài soạn sẵn đi kèm</p>
-        <h2>Bài kỹ năng sống THPT về chuyện học sinh đang gặp</h2>
-      </div>
-      <div class="lessons">
-        <ul class="lesson-list">
-          <li><span class="tag">THPT</span><span>Tỉnh táo trước lừa đảo trực tuyến và deepfake</span></li>
-          <li><span class="tag">THPT</span><span>Thuốc lá điện tử và chất gây nghiện trá hình</span></li>
-          <li><span class="tag">THPT</span><span>Áp lực học tập và sức khoẻ tinh thần</span></li>
-          <li><span class="tag">THPT</span><span>Dùng AI trong học tập một cách trung thực</span></li>
-          <li><span class="tag">THPT</span><span>Quản lí tiền, vay online và cá độ</span></li>
-          <li><span class="tag">THPT</span><span>Ứng phó thiên tai và biến đổi khí hậu</span></li>
-          <li><span class="tag">HĐTN</span><span>Lớp 10, 11, 12 · Chủ đề 4 và HĐ8 rèn luyện phẩm chất</span></li>
-          <li><span class="tag">KNS</span><span>5 bài: an toàn quanh em, an toàn trên mạng, giao tiếp hợp tác, cảm xúc…</span></li>
-        </ul>
-        <div class="lesson-side">
-          <div class="curri">
-            <p class="eyebrow">Phù hợp chương trình</p>
-            <h3>Theo định hướng Chương trình GDPT 2018</h3>
-            <p>Bài Hoạt động trải nghiệm, hướng nghiệp bám theo chủ đề trong sách giáo khoa hiện hành. Mỗi bài có khởi động, khám phá, luyện tập, vận dụng và tự đánh giá.</p>
-          </div>
-          <div>
-            <h3 style="margin-bottom:8px">Kèm thư mục mẫu trống</h3>
-            <ul>
-              <li>Mẫu trắc nghiệm, đúng/sai, trò chơi để điền câu hỏi riêng</li>
-              <li>Mở bằng Notepad, sửa chữ rồi nhập vào chương trình</li>
-              <li>Kèm danh sách câu hỏi kỹ năng sống gợi ý</li>
-            </ul>
-          </div>
-          <p class="hand" style="font-size:1.15rem">Soạn một lần, dạy nhiều lớp.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="band">
     <div class="wrap">
@@ -534,7 +488,6 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
             <tr><th scope="row">Tài khoản</th><td>Giáo viên phải đăng ký, đôi khi cả học sinh</td><td class="us"><span class="yes">✓</span> Không cần tài khoản</td></tr>
             <tr><th scope="row">Dữ liệu học sinh</th><td>Lưu trên máy chủ của nhà cung cấp</td><td class="us"><span class="yes">✓</span> Chỉ nằm trên laptop của thầy cô</td></tr>
             <tr><th scope="row">Giao diện</th><td>Thường bằng tiếng Anh</td><td class="us"><span class="yes">✓</span> Tiếng Việt, có thêm tiếng Anh</td></tr>
-            <tr><th scope="row">Bài soạn sẵn</th><td>Tự tìm trong thư viện cộng đồng</td><td class="us"><span class="yes">✓</span> Bài kỹ năng sống, HĐTN tiếng Việt</td></tr>
             <tr><th scope="row">Học sinh rớt mạng</th><td>Dễ phải vào lại từ đầu</td><td class="us"><span class="yes">✓</span> Vào lại vẫn giữ điểm và đáp án</td></tr>
           </tbody>
         </table>
@@ -587,7 +540,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
           <p class="price"><span data-cfg="giaGiaoVien" class="fill-in">điền giá</span> <small data-cfg="kyHan">/ năm</small></p>
           <ul>
             <li>Đủ mọi loại câu hỏi và trò chơi</li>
-            <li>Toàn bộ bài soạn sẵn và mẫu trống</li>
+            <li>Tự soạn bài không giới hạn</li>
             <li>Hỗ trợ cài đặt qua Zalo</li>
           </ul>
           <a class="btn btn-ghost" href="#dang-ky" data-plan="Giáo viên">Chọn gói giáo viên</a>
