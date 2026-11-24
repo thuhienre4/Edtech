@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://edtech-production-99c1c8d1.up.railway.app/sitemap.xml

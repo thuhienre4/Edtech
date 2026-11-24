@@ -13,8 +13,13 @@ const ten = info.thuongHieu || 'Học liệu số';
 const vcode = String(info.googleVerify || '').replace(/^.*content="([^"]+)".*$/s, '$1').replace(/^google-site-verification=/, '').trim();
 const verify = vcode ? '\n<meta name="google-site-verification" content="' + vcode.replace(/[^A-Za-z0-9_-]/g, '') + '">' : '';
 
+// Địa chỉ chính của web (diaChiWeb): dùng cho thẻ canonical, sitemap.xml và robots.txt để Google tìm thấy trang
+const base = String(info.diaChiWeb || '').trim().replace(/\/?$/, '/');
+const pageUrl = f => base + (f === 'index.html' ? '' : f);
+const pages = fs.readdirSync(SRC).filter(f => f.endsWith('.html'));
+
 fs.mkdirSync(OUT, { recursive: true });
-for (const f of fs.readdirSync(SRC).filter(f => f.endsWith('.html'))) {
+for (const f of pages) {
   let s = fs.readFileSync(path.join(SRC, f), 'utf8');
   const marker = /\/\*THONG-TIN\*\/[\s\S]*?\/\*HET\*\//;
   if (!marker.test(s)) throw new Error(f + ': thiếu chỗ đánh dấu /*THONG-TIN*/{}/*HET*/');
@@ -34,7 +39,7 @@ ${head}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
-<link rel="icon" href="${icon}">${verify}
+<link rel="icon" href="${icon}">${verify}${base !== '/' ? `\n<link rel="canonical" href="${pageUrl(f)}">\n<meta property="og:url" content="${pageUrl(f)}">` : ''}
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
@@ -44,6 +49,14 @@ ${s.slice(cut).trim()}
 `;
   fs.writeFileSync(path.join(OUT, f), out);
   console.log('  ' + f.padEnd(22) + Math.round(out.length / 1024) + ' KB');
+}
+
+if (base !== '/') {
+  const today = new Date().toISOString().slice(0, 10);
+  fs.writeFileSync(path.join(OUT, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    pages.map(f => `  <url><loc>${pageUrl(f)}</loc><lastmod>${today}</lastmod></url>`).join('\n') + '\n</urlset>\n');
+  fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${base}sitemap.xml\n`);
+  console.log('  sitemap.xml, robots.txt  (' + base + ')');
 }
 
 const thieu = ['thuongHieu', 'tenNguoiBan', 'email', 'giaGiaoVien', 'engineGiaGiaoVien'].filter(k => !info[k]);
