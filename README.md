@@ -5,8 +5,6 @@ Website bán hai phần mềm hỗ trợ dạy học:
 - **Lớp học chung Offline**: cả lớp trả lời bằng điện thoại qua Wi-Fi của lớp, không cần Internet.
 - **EngineLab Công nghệ**: học và dạy môn Công nghệ THPT lớp 10–12 với mô hình 3D, thí nghiệm ảo, trợ lí AI, phòng quiz và kho đề.
 
-Liên hệ Zalo: 0336 501 225
-
 ## Thư mục
 
 | Đường dẫn | Nội dung |

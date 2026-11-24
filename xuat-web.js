@@ -43,7 +43,7 @@ ${s.slice(cut).trim()}
   console.log('  ' + f.padEnd(22) + Math.round(out.length / 1024) + ' KB');
 }
 
-const thieu = ['thuongHieu', 'tenNguoiBan', 'zalo', 'email', 'giaGiaoVien', 'engineGiaGiaoVien'].filter(k => !info[k]);
+const thieu = ['thuongHieu', 'tenNguoiBan', 'email', 'giaGiaoVien', 'engineGiaGiaoVien'].filter(k => !info[k]);
 const thieuGia = Object.entries(info.giaSanPham || {}).filter(([, v]) => !v).map(([k]) => k);
 console.log('Đã xuất website vào ' + OUT);
 if (thieu.length || thieuGia.length) console.log('Còn trống (web sẽ hiện khung đỏ "điền ..."): ' + thieu.concat(thieuGia.map(k => 'giá ' + k)).join(', '));

@@ -359,7 +359,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
 
 <script>
 /* Thông tin (giá, Zalo, email...) điền trong website/thong-tin.json, rồi chạy: node website/xuat-web.js */
-var CONFIG = {"thuongHieu":"","tenNguoiBan":"","zalo":"0336 501 225","email":"","fanpage":"","video":"","giaGiaoVien":"","giaTo":"","soGvTo":"","giaTruong":"","kyHan":"","engineGiaGiaoVien":"","engineGiaTruong":"","engineKyHan":""};
+var CONFIG = {"thuongHieu":"","tenNguoiBan":"","zalo":"","zaloLink":"","email":"","fanpage":"","video":"","giaGiaoVien":"","giaTo":"","soGvTo":"","giaTruong":"","kyHan":"","engineGiaGiaoVien":"","engineGiaTruong":"","engineKyHan":""};
 
 /* ===== DANH SÁCH SẢN PHẨM: thêm, bớt, sửa sản phẩm ở đây =====
    loai: phan-mem | cong-nghe (màu bìa)
@@ -420,7 +420,16 @@ document.querySelectorAll('[data-cfg]').forEach(function (el) {
 });
 if (CONFIG.thuongHieu) document.title = CONFIG.thuongHieu + ' · Phần mềm hỗ trợ dạy học';
 var phone = (CONFIG.zalo || '').replace(/\D/g, '');
-document.querySelectorAll('[data-zalo]').forEach(function (a) { if (phone) a.href = 'https://zalo.me/' + phone; else a.removeAttribute('target'); });
+/* Zalo: số điện thoại (zalo) hoặc link không lộ số (zaloLink, ví dụ link Zalo OA hay nhóm Zalo). Không có cả hai thì ẩn nút Zalo. */
+var zaloHref = phone ? 'https://zalo.me/' + phone : (CONFIG.zaloLink || '');
+document.querySelectorAll('[data-zalo]').forEach(function (a) { if (zaloHref) a.href = zaloHref; else a.hidden = true; });
+var zRow = document.getElementById('c-zalo');
+if (zRow && !phone) {
+  if (zaloHref) { zRow.innerHTML = '<a href="' + zaloHref + '" target="_blank" rel="noopener" style="color:inherit">Nhắn qua Zalo ↗</a>'; var zb = document.getElementById('copy-zalo'); if (zb) zb.hidden = true; }
+  else zRow.closest('.contact').hidden = true;
+}
+var mBar = document.querySelector('.m-bar');
+if (mBar && !zaloHref) mBar.style.gridTemplateColumns = '1fr';
 
 /* Hai sản phẩm */
 document.getElementById('duo').innerHTML = SAN_PHAM.map(prod).join('');
@@ -491,7 +500,7 @@ form.addEventListener('submit', function (ev) {
   if (need.length) { say('err', 'Thầy cô điền giúp họ tên và số Zalo để nhận phản hồi.'); document.getElementById(need[0]).focus(); return; }
   if (document.getElementById('f-zalo').value.replace(/\D/g, '').length < 9) { say('err', 'Số Zalo cần ít nhất 9 chữ số, ví dụ 0912 345 678.'); document.getElementById('f-zalo').focus(); return; }
   sendBtn.disabled = true; sendBtn.textContent = 'Đang gửi…';
-  var fallback = CONFIG.zalo ? ' Thầy cô nhắn thẳng Zalo ' + CONFIG.zalo + ' giúp nhé.' : ' Thầy cô nhắn Zalo theo số ở bên cạnh giúp nhé.';
+  var fallback = CONFIG.zalo ? ' Thầy cô nhắn thẳng Zalo ' + CONFIG.zalo + ' giúp nhé.' : CONFIG.zaloLink ? ' Thầy cô bấm nút Nhắn Zalo giúp nhé.' : CONFIG.email ? ' Thầy cô gửi email tới ' + CONFIG.email + ' giúp nhé.' : CONFIG.fanpage ? ' Thầy cô nhắn fanpage ' + CONFIG.fanpage + ' giúp nhé.' : ' Thầy cô thử lại sau ít phút giúp nhé.';
   fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
     .then(function (r) { if (!r.ok) throw new Error(r.status); say('ok', 'Đã nhận đơn. Sẽ có tin nhắn Zalo phản hồi trong ngày.'); form.reset(); })
     .catch(function () { say('err', 'Chưa gửi được đơn.' + fallback); })
