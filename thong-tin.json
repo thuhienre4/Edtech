@@ -1,9 +1,10 @@
 {
-  "_huong_dan": "Điền thông tin rồi chạy: node xuat-web.js. Ô để trống sẽ hiện khung đỏ 'điền ...' trên web. zalo: số điện thoại (sẽ CÔNG KHAI trên web). zaloLink: link Zalo không lộ số (Zalo OA, nhóm Zalo). Để trống cả hai thì web ẩn nút Zalo.",
+  "_huong_dan": "Điền thông tin rồi chạy: node xuat-web.js. Ô để trống sẽ hiện khung đỏ 'điền ...' trên web. zalo: số điện thoại (sẽ CÔNG KHAI trên web). zaloLink: link Zalo không lộ số (Zalo OA, nhóm Zalo). Để trống cả hai thì web ẩn nút Zalo. googleForm: link phiếu Google Forms (dạng https://forms.gle/...), có link thì web dùng phiếu Google để nhận đăng ký.",
   "thuongHieu": "",
   "tenNguoiBan": "",
   "zalo": "",
   "zaloLink": "",
+  "googleForm": "",
   "email": "",
   "fanpage": "",
   "video": "",

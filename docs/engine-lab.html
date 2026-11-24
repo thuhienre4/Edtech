@@ -520,6 +520,12 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
           <button class="btn btn-main" type="submit" id="f-gui">Gửi đăng ký</button>
           <p class="fine">Thông tin chỉ dùng để liên hệ về EngineLab, không chia sẻ cho bên khác.</p>
         </form>
+        <div class="gform" id="gform" hidden style="background:var(--card);color:var(--ink);border-radius:14px;padding:clamp(20px,3vw,28px);display:grid;gap:14px;align-content:start">
+          <h3>Phiếu đăng ký</h3>
+          <p style="color:var(--ink-soft)">Thầy cô điền phiếu trên Google Forms: họ tên, trường, sản phẩm quan tâm và cách liên hệ. Chỉ mất khoảng một phút, không cần đăng nhập.</p>
+          <a class="btn btn-main" id="gform-link" href="#" target="_blank" rel="noopener">Mở phiếu đăng ký ↗</a>
+          <p class="fine">Phiếu mở trong thẻ mới. Thông tin chỉ dùng để liên hệ về sản phẩm, không chia sẻ cho bên khác.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -543,7 +549,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
 
 <script>
 /* Thông tin (giá, Zalo, email...) điền trong website/thong-tin.json, rồi chạy: node website/xuat-web.js */
-var CONFIG = {"thuongHieu":"","tenNguoiBan":"","zalo":"","zaloLink":"","email":"","fanpage":"","video":"","giaGiaoVien":"","giaTo":"","soGvTo":"","giaTruong":"","kyHan":"","engineGiaGiaoVien":"","engineGiaTruong":"","engineKyHan":""};
+var CONFIG = {"thuongHieu":"","tenNguoiBan":"","zalo":"","zaloLink":"","googleForm":"","email":"","fanpage":"","video":"","giaGiaoVien":"","giaTo":"","soGvTo":"","giaTruong":"","kyHan":"","engineGiaGiaoVien":"","engineGiaTruong":"","engineKyHan":""};
 
 document.querySelectorAll('[data-cfg]').forEach(function (el) {
   var v = CONFIG[el.dataset.cfg];
@@ -588,6 +594,13 @@ form.addEventListener('submit', function (ev) {
     .catch(function () { say('err', 'Chưa gửi được đăng ký.' + fallback); })
     .then(function () { sendBtn.disabled = false; sendBtn.textContent = 'Gửi đăng ký'; });
 });
+
+/* Google Form: có link trong thong-tin.json (googleForm) thì dùng phiếu Google thay cho form trên trang */
+if (CONFIG.googleForm) {
+  var gf = document.getElementById('gform'), gfForm = document.getElementById('form-engine');
+  document.getElementById('gform-link').href = CONFIG.googleForm;
+  gfForm.hidden = true; gf.hidden = false;
+}
 </script>
 </body>
 </html>
