@@ -1,6 +1,6 @@
 <title>Phần mềm hỗ trợ dạy học</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Lớp học chung Offline và EngineLab Công nghệ: phần mềm hỗ trợ giáo viên THCS, THPT dạy học sinh động hơn.">
+<meta name="description" content="Công nghệ vừa tay thầy cô, tiết học vừa lòng học trò: phần mềm giáo dục tích hợp AI, giải pháp lớp học tương tác không cần mạng và bài giảng tham khảo cho giáo viên THCS, THPT.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Pangolin&display=swap">
@@ -22,6 +22,7 @@
   --screen-fg: #f3f0ff;
   --c-phan-mem: #4b2fa6;
   --c-cong-nghe: #17375e;
+  --c-bai-giang: #15806a;
 
 
   --cover-fg: #ffffff;
@@ -35,13 +36,13 @@
   --ink: #ece9f5; --ink-soft: #a8a3bd; --violet: #a993ff; --violet-soft: #2c2547;
   --red: #ff7a6e; --green: #4cc98f; --line: #332d47; --card: #1f1b2c;
   --screen: #0d0b18; --screen-fg: #f3f0ff;
-  --c-phan-mem: #5a3fc0; --c-cong-nghe: #1f4a7a; color-scheme: dark } }
+  --c-phan-mem: #5a3fc0; --c-cong-nghe: #1f4a7a; --c-bai-giang: #17806b; color-scheme: dark } }
 :root[data-theme="dark"] {
   --paper: #16131f; --paper-2: #1e1a2b; --grid: rgba(170, 150, 255, .06);
   --ink: #ece9f5; --ink-soft: #a8a3bd; --violet: #a993ff; --violet-soft: #2c2547;
   --red: #ff7a6e; --green: #4cc98f; --line: #332d47; --card: #1f1b2c;
   --screen: #0d0b18; --screen-fg: #f3f0ff;
-  --c-phan-mem: #5a3fc0; --c-cong-nghe: #1f4a7a; color-scheme: dark }
+  --c-phan-mem: #5a3fc0; --c-cong-nghe: #1f4a7a; --c-bai-giang: #17806b; color-scheme: dark }
 
 * { box-sizing: border-box }
 html { scroll-behavior: smooth; scroll-padding-top: 72px }
@@ -142,6 +143,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .hero-1 .hero-copy { max-width: 820px }
 .hero-1 { padding-bottom: 8px }
 .duo-sec { padding-top: 32px }
+.groups .grp { display: grid; grid-template-rows: auto 1fr; gap: 10px; min-width: 0 }
+.groups .grp > div { display: grid }
 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch }
 @media (max-width: 900px) { .duo { grid-template-columns: 1fr } }
 .prod { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0 }
@@ -234,7 +237,9 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
       <span data-cfg="thuongHieu">Học liệu số</span>
     </a>
     <nav aria-label="Mục chính">
-      <a href="#san-pham">Sản phẩm</a>
+      <a href="#phan-mem">Phần mềm</a>
+      <a href="#giai-phap">Giải pháp</a>
+      <a href="#bai-giang">Bài giảng</a>
       <a href="#cach-mua">Cách mua</a>
       <a href="#dat-hang">Liên hệ</a>
       <a class="btn btn-main btn-sm" href="#dat-hang">Đặt hàng</a>
@@ -248,11 +253,11 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
     <section class="hero hero-1" id="trang-chu">
       <div class="wrap">
         <div class="hero-copy">
-          <p class="eyebrow">Phần mềm hỗ trợ dạy học · THCS · THPT</p>
-          <h1>Hai phần mềm giúp tiết học <em>sinh động, dễ dạy hơn</em></h1>
-          <p class="lead">Lớp học chung cho cả lớp trả lời bằng điện thoại mà không cần Internet. EngineLab đưa mô hình 3D, trợ lí AI và kho đề vào môn Công nghệ lớp 10 đến 12. Do giáo viên làm cho giáo viên, có người hỗ trợ cài đặt qua Zalo.</p>
+          <p class="eyebrow">Phần mềm · Giải pháp · Bài giảng cho giáo viên THCS, THPT</p>
+          <h1>Công nghệ vừa tay thầy cô, <em>tiết học vừa lòng học trò</em></h1>
+          <p class="lead">Do giáo viên làm cho giáo viên: phần mềm có trợ lí AI cho môn Công nghệ, giải pháp lớp học tương tác chạy cả khi không có mạng, và bài giảng soạn sẵn để tham khảo. Dễ dùng từ tiết đầu tiên, có người hỗ trợ khi cần.</p>
           <div class="cta-row">
-            <a class="btn btn-main" href="#san-pham">Xem hai sản phẩm</a>
+            <a class="btn btn-main" href="#san-pham">Xem sản phẩm</a>
             <a class="btn" href="#dat-hang">Đăng ký dùng thử</a>
           </div>
         </div>
@@ -261,7 +266,10 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
 
     <section class="duo-sec" id="san-pham">
       <div class="wrap">
-        <div class="duo" id="duo"></div>
+        <div class="duo groups">
+          <div class="grp" id="phan-mem"><p class="eyebrow">Phần mềm giáo dục</p><div id="g-cong-nghe"></div></div>
+          <div class="grp" id="giai-phap"><p class="eyebrow">Giải pháp giáo dục</p><div id="g-phan-mem"></div></div>
+        </div>
         <div class="combo" id="combo" hidden>
           <div><p class="eyebrow">Mua cả hai</p><h3>Lớp học chung Offline + EngineLab Công nghệ</h3><p class="lead" id="combo-note"></p></div>
           <div class="combo-buy"><span class="p" id="combo-gia"></span><a class="btn btn-main" href="#dat-hang" data-order="combo">Đặt gói kết hợp</a></div>
@@ -269,7 +277,14 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
       </div>
     </section>
 
-    <section class="band">
+    <section class="band" id="bai-giang">
+      <div class="wrap">
+        <div class="sec-head"><div><p class="eyebrow">Bài giảng tham khảo</p><h2>Bài giảng soạn sẵn để thầy cô tham khảo</h2><p class="lead">Bài kỹ năng sống và Hoạt động trải nghiệm có khởi động, câu hỏi tình huống và hướng dẫn tổ chức. Thầy cô mở ra chỉnh cho hợp lớp mình.</p></div></div>
+        <div class="grid" id="grid-bai-giang"></div>
+      </div>
+    </section>
+
+    <section>
       <div class="wrap">
         <div class="sec-head"><div><p class="eyebrow">Vì sao chọn</p><h2>Làm cho lớp học Việt Nam</h2></div></div>
         <div class="why">
@@ -309,7 +324,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
           <p class="req" id="d-req"></p>
         </div>
       </div>
-      <div class="related"><h2>Sản phẩm còn lại</h2><div class="duo" id="d-related"></div></div>
+      <div class="related"><h2>Có thể thầy cô quan tâm</h2><div class="grid" id="d-related"></div></div>
     </div>
   </section>
 
@@ -353,7 +368,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
 
 <footer class="site">
   <div class="wrap">
-    <span><span data-cfg="thuongHieu">Học liệu số</span> · Lớp học chung Offline · EngineLab Công nghệ</span>
+    <span><span data-cfg="thuongHieu">Học liệu số</span> · Công nghệ vừa tay thầy cô, tiết học vừa lòng học trò</span>
     <span>© 2026 <span data-cfg="tenNguoiBan" class="fill-in">tên người bán</span></span>
   </div>
 </footer>
@@ -368,7 +383,7 @@ footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-betwe
 var CONFIG = /*THONG-TIN*/{}/*HET*/;
 
 /* ===== DANH SÁCH SẢN PHẨM: thêm, bớt, sửa sản phẩm ở đây =====
-   loai: phan-mem | cong-nghe (màu bìa)
+   loai: cong-nghe = Phần mềm giáo dục · phan-mem = Giải pháp giáo dục · bai-giang = Bài giảng tham khảo
    trang: nếu sản phẩm có trang giới thiệu riêng (ví dụ lop-hoc-chung.html) */
 var SAN_PHAM = [
   { ma: 'lop-hoc-chung', ten: 'Lớp học chung Offline', loai: 'phan-mem', trang: 'lop-hoc-chung.html', thuNghiem: true,
@@ -393,11 +408,47 @@ var SAN_PHAM = [
       'Trải nghiệm nghề: xử lí tình huống ở nơi làm việc, gợi ý ngành học phù hợp'
     ],
     canCo: 'Trình duyệt Chrome hoặc Edge bản mới trên máy tính, máy chiếu hay điện thoại, có kết nối Internet. Mất mạng vẫn mở được bài học, mô hình và phòng quiz chế độ trình chiếu; tiến độ tự đồng bộ khi có mạng lại.',
-    icon: '<circle cx="32" cy="32" r="9"/><path d="M32 8v8M32 48v8M8 32h8M48 32h8M15 15l6 6M43 43l6 6M15 49l6-6M43 21l6-6"/>' }
+    icon: '<circle cx="32" cy="32" r="9"/><path d="M32 8v8M32 48v8M8 32h8M48 32h8M15 15l6 6M43 43l6 6M15 49l6-6M43 21l6-6"/>' },
+
+  /* ---------- Bài giảng tham khảo ---------- */
+  { ma: 'kns-thpt', ten: 'Bộ 6 bài kỹ năng sống THPT', loai: 'bai-giang',
+    tomTat: 'Lừa đảo và deepfake, thuốc lá điện tử, sức khoẻ tinh thần, dùng AI trung thực, vay online và cá độ, ứng phó thiên tai.',
+    moTa: 'Sáu tiết kỹ năng sống về những vấn đề học sinh THPT đang gặp hằng ngày. Mỗi tiết 45 phút theo tiến trình Khởi động, Khám phá, Luyện tập, Vận dụng, Tự đánh giá.',
+    gom: ['Tỉnh táo trước lừa đảo trực tuyến và deepfake', 'Thuốc lá điện tử và chất gây nghiện trá hình', 'Áp lực học tập và sức khoẻ tinh thần', 'Dùng AI trong học tập một cách trung thực', 'Quản lí tiền, vay online và cá độ', 'Ứng phó thiên tai và biến đổi khí hậu'],
+    canCo: 'Chạy trên phần mềm Lớp học chung Offline. Kèm danh sách câu hỏi để in.',
+    icon: '<path d="M32 8l20 8v14c0 12-8.6 21-20 24-11.4-3-20-12-20-24V16z"/><path d="M24 32l6 6 12-12"/>' },
+
+  { ma: 'kns-5', ten: 'Bộ 5 bài kỹ năng sống', loai: 'bai-giang',
+    tomTat: 'Khởi động tổng hợp, an toàn quanh em, an toàn trên mạng, giao tiếp và hợp tác, cảm xúc và căng thẳng.',
+    moTa: 'Năm bài kỹ năng sống dùng cho tiết sinh hoạt lớp, Hoạt động trải nghiệm hoặc lớp kỹ năng ở trung tâm. Có trò chơi khởi động, câu hỏi tình huống và phần tự đánh giá.',
+    gom: ['Khởi động tổng hợp với các trò chơi trên lớp', 'An toàn quanh em', 'An toàn trên mạng', 'Giao tiếp và hợp tác', 'Cảm xúc và căng thẳng'],
+    canCo: 'Chạy trên phần mềm Lớp học chung Offline. Kèm danh sách câu hỏi để in.',
+    icon: '<circle cx="24" cy="24" r="8"/><circle cx="42" cy="26" r="6"/><path d="M10 52c2-9 8-14 14-14s12 5 14 14M34 50c1-6 4-10 8-10s8 4 9 10"/>' },
+
+  { ma: 'hdtn-cd4', ten: 'Trò chơi HĐTN 10 · 11 · 12, Chủ đề 4', loai: 'bai-giang',
+    tomTat: 'Ba trò chơi theo đội chiếu lên máy chiếu cho Chủ đề 4 Hoạt động trải nghiệm, hướng nghiệp ba khối lớp.',
+    moTa: 'Bộ trò chơi theo đội cho Chủ đề 4 Hoạt động trải nghiệm, hướng nghiệp. Mỗi trò chơi là một file mở bằng trình duyệt, có bảng điểm đội và hướng dẫn tổ chức cho giáo viên.',
+    gom: ['Lớp 10 · Chủ động, tự tin trong học tập và giao tiếp: trò chơi 4 tổ, 4 tiết, 1 nhà vô địch', 'Lớp 11 · Trách nhiệm với gia đình: Cả nhà cùng giải, có vòng quay thưởng phạt', 'Lớp 12 · Trách nhiệm với gia đình: Rung chuông vàng', 'Hướng dẫn tổ chức 15 đến 25 phút cho từng trò'],
+    canCo: 'Mở bằng Chrome hoặc Edge trên máy chiếu hay TV, không cần mạng.',
+    icon: '<rect x="8" y="12" width="48" height="36" rx="3"/><path d="M8 24h48M20 12v36M32 12v36M44 12v36"/>' },
+
+  { ma: 'hd8', ten: 'Bài HĐ8 · Rèn luyện phẩm chất (HĐTN 10)', loai: 'bai-giang',
+    tomTat: 'Bài giảng tương tác và phiếu học sinh chạy offline cho HĐ8, Chủ đề 3, Hoạt động trải nghiệm, hướng nghiệp 10.',
+    moTa: 'Trọn bộ cho HĐ8 Rèn luyện trách nhiệm, tự trọng, tự chủ, ý chí vượt khó trong việc thực hiện mục tiêu của bản thân. Gồm bài trình chiếu tương tác và phiếu học sinh làm trên điện thoại.',
+    gom: ['Bài giảng tương tác: khởi động, khám phá, luyện tập, vận dụng, tự đánh giá', 'Phiếu học sinh chạy offline với tình huống gần gũi lớp 10', 'Câu đúng/sai có giải thích sau mỗi câu', 'Ghi chú cho giáo viên ở từng hoạt động'],
+    canCo: 'Bài giảng chạy trên Lớp học chung Offline. Phiếu học sinh mở bằng trình duyệt điện thoại.',
+    icon: '<path d="M16 8h24l8 8v40H16z"/><path d="M40 8v8h8M24 30h16M24 38h16M24 46h10"/>' },
+
+  { ma: 'lam-chu-24h', ten: 'Chuyên đề: Làm chủ 24 giờ của bạn', loai: 'bai-giang',
+    tomTat: 'Chuyên đề quản lý thời gian: ma trận Eisenhower, Pomodoro, time blocking, có biểu quyết và điểm danh QR.',
+    moTa: 'Bộ trình chiếu chuyên đề quản lý thời gian cho học sinh, kèm công cụ cho học viên làm bài trên điện thoại. Hợp với tiết sinh hoạt, chuyên đề kỹ năng hoặc lớp kỹ năng ở trung tâm.',
+    gom: ['Slide 16:9: 24 giờ của em, ma trận Eisenhower, Pomodoro, time blocking', 'Biểu quyết, bảng xếp hạng và phần cam kết cuối buổi', 'Điểm danh bằng mã QR', 'Công cụ Quản lý 24 giờ cho học viên: làm bài và xem kết quả'],
+    canCo: 'Mở bằng trình duyệt trên laptop. Học viên dùng điện thoại.',
+    icon: '<circle cx="32" cy="32" r="22"/><path d="M32 18v14l10 6"/>' }
 ];
 /* ============================================================ */
 
-var LOAI = { 'phan-mem': 'Giải pháp giáo dục', 'cong-nghe': 'Phần mềm tích hợp AI' };
+var LOAI = { 'cong-nghe': 'Phần mềm giáo dục', 'phan-mem': 'Giải pháp giáo dục', 'bai-giang': 'Bài giảng tham khảo' };
 var gsp = CONFIG.giaSanPham || {};
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 /* Chữ bắt đầu bằng "điền" là chỗ chưa có nội dung: hiện khung đỏ */
@@ -419,11 +470,15 @@ function giaCua(p) {
 function cover(p, big) {
   return '<div class="cover" style="--c:var(--c-' + p.loai + ')"><span class="kind">' + LOAI[p.loai] + '</span>' + (big ? '<span class="big">' + esc(p.ten) + '</span>' : '') + '<svg viewBox="0 0 64 64" aria-hidden="true">' + p.icon + '</svg></div>';
 }
+function card(p) {
+  return '<a class="card" href="#sp-' + p.ma + '">' + cover(p, true) + '<div class="card-body"><p>' + txt(p.tomTat) + '</p><span></span><div class="card-foot"><b>' + giaCua(p) + '</b><span>Xem chi tiết →</span></div></div></a>';
+}
+function nutMua(p) { return p.loai === 'bai-giang' ? 'Nhận bài giảng' : p.thuNghiem ? 'Dùng thử 30 ngày' : 'Đặt mua'; }
 function prod(p) {
   var more = p.trang || ('#sp-' + p.ma);
   return '<article class="prod">' + cover(p, true) + '<div class="prod-body"><p>' + txt(p.tomTat) + '</p><ul>' + p.gom.slice(0, 4).map(function (g) { return '<li>' + txt(g) + '</li>'; }).join('') + '</ul>' +
     '<div class="prod-foot"><span class="p">' + giaCua(p) + '</span><span class="cta-row"><a class="btn btn-sm" href="' + more + '">Xem chi tiết</a>' +
-    '<a class="btn btn-main btn-sm" href="#dat-hang" data-order="' + p.ma + '">' + (p.thuNghiem ? 'Dùng thử 30 ngày' : 'Đặt mua') + '</a></span></div></div></article>';
+    '<a class="btn btn-main btn-sm" href="#dat-hang" data-order="' + p.ma + '">' + nutMua(p) + '</a></span></div></div></article>';
 }
 
 /* Cấu hình chung: thương hiệu, liên hệ */
@@ -445,7 +500,10 @@ var mBar = document.querySelector('.m-bar');
 if (mBar && !zaloHref) mBar.style.gridTemplateColumns = '1fr';
 
 /* Hai sản phẩm */
-document.getElementById('duo').innerHTML = SAN_PHAM.map(prod).join('');
+var theoLoai = function (l) { return SAN_PHAM.filter(function (p) { return p.loai === l; }); };
+document.getElementById('g-cong-nghe').innerHTML = theoLoai('cong-nghe').map(prod).join('');
+document.getElementById('g-phan-mem').innerHTML = theoLoai('phan-mem').map(prod).join('');
+document.getElementById('grid-bai-giang').innerHTML = theoLoai('bai-giang').map(card).join('');
 
 if (CONFIG.giaCombo) {
   document.getElementById('combo').hidden = false;
@@ -484,10 +542,12 @@ function show() {
   document.getElementById('d-cta').innerHTML =
     (p.trang ? '<a class="btn btn-sm" href="' + p.trang + '">Trang giới thiệu đầy đủ</a>' : '') +
     (p.web ? '<a class="btn btn-sm" href="' + p.web + '" target="_blank" rel="noopener">Mở ' + esc(p.ten.split(' ')[0]) + ' ↗</a>' : '') +
-    '<a class="btn btn-main btn-sm" href="#dat-hang" data-order="' + p.ma + '">' + (p.thuNghiem ? 'Dùng thử 30 ngày' : 'Đặt mua') + '</a>';
+    '<a class="btn btn-main btn-sm" href="#dat-hang" data-order="' + p.ma + '">' + nutMua(p) + '</a>';
   document.getElementById('d-incl').innerHTML = p.gom.map(function (g) { return '<li>' + txt(g) + '</li>'; }).join('');
   document.getElementById('d-req').innerHTML = '<strong>Cần có:</strong> ' + txt(p.canCo);
-  document.getElementById('d-related').innerHTML = SAN_PHAM.filter(function (x) { return x.ma !== p.ma; }).map(prod).join('');
+  var rel = SAN_PHAM.filter(function (x) { return x.ma !== p.ma && x.loai === p.loai; });
+  rel = rel.concat(SAN_PHAM.filter(function (x) { return x.ma !== p.ma && x.loai !== p.loai; })).slice(0, 3);
+  document.getElementById('d-related').innerHTML = rel.map(card).join('');
   document.title = p.ten + ' · ' + (CONFIG.thuongHieu || 'Phần mềm dạy học');
   window.scrollTo(0, 0);
 }
